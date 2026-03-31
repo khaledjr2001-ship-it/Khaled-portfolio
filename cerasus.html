@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerasus — KA Design Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --paper:   #F4EFE6;
+            --paper-2: #FAF7F1;
+            --paper-3: #FFFFFF;
+            --ink:     #18140D;
+            --ink-2:   #6B6050;
+            --ink-3:   #B0A490;
+            --accent:  #C87038;
+            --rule:    #D8CCBA;
+            --font-d:  'Playfair Display', serif;
+            --font-c:  'Cormorant Garamond', serif;
+            --font-b:  'Inter', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--paper);
+            color: var(--ink);
+            font-family: var(--font-b);
+            font-size: 16px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: var(--paper); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+        ::selection { background: var(--accent); color: #fff; }
+
+        /* ═══ MASTHEAD NAV ═══ */
+        .masthead {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            background: rgba(244,239,230,0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--rule);
+            padding: 0 64px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.3s;
+        }
+        .masthead-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .masthead-back {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--ink-2);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .masthead-back:hover { color: var(--accent); }
+        .masthead-back svg { width: 12px; height: 12px; }
+        .masthead-divider {
+            width: 1px; height: 16px;
+            background: var(--rule);
+        }
+        .masthead-brand {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--ink);
+            text-decoration: none;
+        }
+        .masthead-brand span { color: var(--accent); }
+        .masthead-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+        .masthead-title {
+            font-family: var(--font-d);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            color: var(--ink);
+        }
+        .masthead-issue {
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--ink-3);
+        }
+        .masthead-right {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ink-3);
+        }
+
+        /* ═══ HERO ═══ */
+        .case-hero {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-photo {
+            position: absolute;
+            inset: 0;
+            background: url('images/cerasus/hero_dsc0299.jpg') center center / cover no-repeat;
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(24,20,13,0.1) 0%,
+                rgba(24,20,13,0.0) 25%,
+                rgba(24,20,13,0.4) 60%,
+                rgba(24,20,13,0.88) 100%
+            );
+        }
+        .hero-content {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 0 64px 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .hero-left { max-width: 680px; }
+        .hero-issue {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: rgba(244,239,230,0.55);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            opacity: 0;
+            animation: fadeIn 1s 0.2s forwards;
+        }
+        .hero-issue::before { content: ''; width: 32px; height: 1px; background: var(--accent); }
+        .hero-title {
+            font-family: var(--font-d);
+            font-weight: 900;
+            font-size: clamp(72px, 12vw, 160px);
+            line-height: 0.85;
+            letter-spacing: -0.03em;
+            color: #FAF7F1;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeIn 1s 0.4s forwards;
+        }
+        .hero-tagline {
+            font-family: var(--font-c);
+            font-style: italic;
+            font-size: clamp(18px, 2vw, 26px);
+            color: rgba(244,239,230,0.75);
+            font-weight: 300;
+            letter-spacing: 0.02em;
+            opacity: 0;
+            animation: fadeIn 1s 0.6s forwards;
+        }
+        .hero-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+            opacity: 0;
+            animation: fadeIn 1s 0.8s forwards;
+        }
+        .hero-meta-row {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .hero-meta-label {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(244,239,230,0.4);
+        }
+        .hero-meta-value {
+            font-family: var(--font-d);
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(244,239,230,0.85);
+        }
+
+        /* ═══ PAGE WRAPPER ═══ */
+        .page { max-width: 1280px; margin: 0 auto; padding: 0 64px; }
+
+        /* ═══ CHAPTER HEADER ═══ */
+        .chapter {
+            padding: 88px 0 64px;
+        }
+        .chapter-rule { display: flex; align-items: center; gap: 0; margin-bottom: 20px; }
+        .chapter-line { flex: 1; height: 1px; background: var(--rule); }
+        .chapter-tag {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--ink-3);
+            padding: 0 20px;
+        }
+        .chapter-num {
+            font-family: var(--font-d);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--ink-3);
+        }
+        .chapter-title {
+            font-family: var(--font-d);
+            font-size: clamp(36px, 5vw, 72px);
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            line-height: 1;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+        .chapter-title em {
+            font-style: italic;
+            color: var(--accent);
+        }
+        .chapter-sub {
+            font-family: var(--font-c);
+            font-style: italic;
+            font-size: 18px;
+            color: var(--ink-2);
+            font-weight: 300;
+        }
+
+        /* ═══ BRIEF ═══ */
+        .brief-layout {
+            display: grid;
+            grid-template-columns: 1fr 2px 1.4fr;
+            gap: 64px;
+            align-items: start;
+            padding-top: 16px;
+        }
+        .brief-meta { display: flex; flex-direction: column; gap: 28px; }
+        .brief-meta-item {}
+        .brief-meta-label {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--ink-3);
+            margin-bottom: 4px;
+        }
+        .brief-meta-value {
+            font-family: var(--font-d);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+        .brief-divider { background: var(--rule); align-self: stretch; }
+        .brief-text {}
+        .brief-body {
+            font-size: 15px;
+            color: var(--ink-2);
+            line-height: 1.9;
+            margin-bottom: 40px;
+        }
+        .brief-body::first-letter {
+            font-family: var(--font-d);
+            font-size: 4.5em;
+            font-weight: 900;
+            float: left;
+            line-height: 0.75;
+            margin: 6px 14px 0 0;
+            color: var(--accent);
+        }
+
+        /* ═══ PULL QUOTE ═══ */
+        .pull-quote {
+            border-left: 3px solid var(--accent);
+            padding: 16px 0 16px 32px;
+            margin: 40px 0;
+        }
+        .pull-quote blockquote {
+            font-family: var(--font-d);
+            font-style: italic;
+            font-size: clamp(18px, 2.2vw, 26px);
+            font-weight: 400;
+            line-height: 1.45;
+            color: var(--ink);
+            letter-spacing: -0.01em;
+        }
+        .pull-quote cite {
+            display: block;
+            margin-top: 12px;
+            font-family: var(--font-b);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-style: normal;
+        }
+
+        /* ═══ IMAGE STYLES ═══ */
+        .img-full { width: 100%; display: block; }
+        .img-frame {
+            overflow: hidden;
+            background: var(--paper-2);
+        }
+        .img-frame img { width: 100%; display: block; transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94); }
+        .img-frame:hover img { transform: scale(1.03); }
+        .img-caption {
+            font-size: 11px;
+            color: var(--ink-3);
+            font-style: italic;
+            margin-top: 10px;
+            letter-spacing: 0.02em;
+        }
+        .img-label {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--ink-3);
+            margin-top: 10px;
+        }
+
+        /* ─── FULL BLEED ─── */
+        .bleed {
+            margin: 0 -64px;
+        }
+        .bleed img { width: 100%; display: block; }
+        .bleed-caption {
+            padding: 16px 64px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .bleed-caption p {
+            font-size: 12px;
+            color: var(--ink-3);
+            font-style: italic;
+        }
+        .bleed-caption span {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--ink-3);
+        }
+
+        /* ─── SECTION RULE ─── */
+        .rule {
+            height: 1px;
+            background: var(--rule);
+            margin: 80px 0;
+        }
+        .rule-labeled {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin: 80px 0;
+        }
+        .rule-labeled::before,
+        .rule-labeled::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+        .rule-labeled span {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--ink-3);
+            white-space: nowrap;
+        }
+
+        /* ─── GRIDS ─── */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+        .grid-asym { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; }
+        .grid-asym-r { display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; }
+
+        .col-gap { gap: 56px; }
+
+        /* ─── SPLIT LAYOUT ─── */
+        .editorial-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 72px;
+            align-items: start;
+        }
+        .editorial-split.wide-l { grid-template-columns: 1.6fr 1fr; }
+        .editorial-split.wide-r { grid-template-columns: 1fr 1.6fr; }
+
+        .text-col { display: flex; flex-direction: column; gap: 20px; }
+        .text-col h3 {
+            font-family: var(--font-d);
+            font-size: clamp(22px, 2.5vw, 34px);
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            line-height: 1.15;
+            color: var(--ink);
+        }
+        .text-col h3 em { font-style: italic; color: var(--accent); }
+        .text-col p {
+            font-size: 14px;
+            color: var(--ink-2);
+            line-height: 1.9;
+        }
+        .text-col .small-label {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        /* ─── MOODBOARD ─── */
+        .moodboard-grid {
+            display: grid;
+            grid-template-columns: 1.8fr 1fr 1fr;
+            grid-template-rows: 260px 260px;
+            gap: 8px;
+        }
+        .moodboard-grid .span-col { grid-row: span 2; }
+        .moodboard-grid .img-frame { height: 100%; }
+        .moodboard-grid .img-frame img { height: 100%; object-fit: cover; }
+
+        /* ─── PROCESS STEP ─── */
+        .process-chapter {
+            padding: 56px 0;
+            border-top: 1px solid var(--rule);
+        }
+        .process-step-num {
+            font-family: var(--font-d);
+            font-size: 80px;
+            font-weight: 900;
+            color: rgba(24,20,13,0.06);
+            line-height: 1;
+            margin-bottom: -20px;
+        }
+        .process-step-title {
+            font-family: var(--font-d);
+            font-size: clamp(24px, 3vw, 40px);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            margin-bottom: 32px;
+        }
+        .process-note {
+            background: var(--paper-2);
+            border: 1px solid var(--rule);
+            border-left: 3px solid var(--accent);
+            padding: 20px 24px;
+            font-size: 13px;
+            color: var(--ink-2);
+            line-height: 1.7;
+        }
+        .process-note strong { color: var(--ink); font-weight: 500; }
+
+        /* ─── MATERIALS ─── */
+        .material-spread {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--rule);
+            border: 1px solid var(--rule);
+            overflow: hidden;
+        }
+        .material-panel {
+            background: var(--paper-2);
+            display: flex;
+            flex-direction: column;
+        }
+        .material-panel .mat-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+        .material-panel .mat-body { padding: 24px 28px; flex: 1; }
+        .material-panel .mat-name {
+            font-family: var(--font-d);
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--rule);
+        }
+        .material-panel .mat-props { display: flex; flex-direction: column; gap: 6px; }
+        .material-panel .mat-prop {
+            font-size: 13px;
+            color: var(--ink-2);
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+        .material-panel .mat-prop::before {
+            content: '—';
+            color: var(--accent);
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        /* ─── FINAL GALLERY ─── */
+        .gallery-cover {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            display: block;
+        }
+        .gallery-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .gallery-strip .img-frame img { width: 100%; height: auto; display: block; }
+
+        /* ─── ANIMATION ─── */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .reveal {
+            opacity: 0; transform: translateY(28px);
+            transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1), transform 0.85s cubic-bezier(0.22,1,0.36,1);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .d1 { transition-delay: 0.07s; } .d2 { transition-delay: 0.14s; }
+        .d3 { transition-delay: 0.21s; } .d4 { transition-delay: 0.28s; }
+
+        /* ─── FOOTER ─── */
+        footer {
+            border-top: 1px solid var(--rule);
+            padding: 32px 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--paper-2);
+        }
+        footer p { font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em; }
+        .footer-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--ink-2);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-back:hover { color: var(--accent); }
+        .footer-back svg { width: 13px; height: 13px; }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 1024px) {
+            .page { padding: 0 40px; }
+            .masthead { padding: 0 40px; }
+            .hero-content { padding: 0 40px 56px; }
+            .bleed { margin: 0 -40px; }
+            .bleed-caption { padding: 16px 40px 0; }
+            .editorial-split, .editorial-split.wide-l, .editorial-split.wide-r { grid-template-columns: 1fr; gap: 40px; }
+            .brief-layout { grid-template-columns: 1fr; gap: 40px; }
+            .brief-divider { display: none; }
+            .grid-4 { grid-template-columns: 1fr 1fr; }
+            .material-spread { grid-template-columns: 1fr; }
+            footer { padding: 24px 40px; }
+        }
+        @media (max-width: 768px) {
+            .masthead { padding: 0 20px; }
+            .masthead-center { display: none; }
+            .masthead-right { display: none; }
+            .page { padding: 0 20px; }
+            .hero-content { padding: 0 20px 40px; }
+            .hero-right { display: none; }
+            .bleed { margin: 0 -20px; }
+            .bleed-caption { padding: 12px 20px 0; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .grid-asym, .grid-asym-r { grid-template-columns: 1fr; }
+            .moodboard-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+            .moodboard-grid .span-col { grid-row: span 1; }
+            .moodboard-grid .img-frame { height: 200px; }
+            .gallery-strip { grid-template-columns: 1fr 1fr; }
+            footer { flex-direction: column; gap: 12px; padding: 20px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead" id="masthead">
+    <div class="masthead-left">
+        <a href="index.html" class="masthead-back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+            Portfolio
+        </a>
+        <div class="masthead-divider"></div>
+        <a href="index.html" class="masthead-brand">K<span>A</span> Design Studio</a>
+    </div>
+    <div class="masthead-center">
+        <div class="masthead-title">Cerasus</div>
+        <div class="masthead-issue">Feature &nbsp;·&nbsp; Spring 2024 &nbsp;·&nbsp; Sophomore Studio</div>
+    </div>
+    <div class="masthead-right">Industrial Design</div>
+</header>
+
+<!-- ═══ HERO ═══ -->
+<div class="case-hero">
+    <div class="hero-photo" id="heroPhoto"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-left">
+            <p class="hero-issue">Feature &nbsp;·&nbsp; Sophomore Studio</p>
+            <h1 class="hero-title">Cerasus</h1>
+            <p class="hero-tagline">a chair for your elegance</p>
+        </div>
+        <div class="hero-right">
+            <div class="hero-meta-row">
+                <span class="hero-meta-label">Year</span>
+                <span class="hero-meta-value">Spring 2024</span>
+            </div>
+            <div class="hero-meta-row">
+                <span class="hero-meta-label">Duration</span>
+                <span class="hero-meta-value">7 Weeks</span>
+            </div>
+            <div class="hero-meta-row">
+                <span class="hero-meta-label">Material</span>
+                <span class="hero-meta-value">Cherry Wood</span>
+            </div>
+            <div class="hero-meta-row">
+                <span class="hero-meta-label">Instructor</span>
+                <span class="hero-meta-value">Jim Budd</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ CONTENT ═══ -->
+<main class="page">
+
+    <div class="gallery-strip reveal" style="margin-bottom: 60px; grid-template-columns: 1fr 1fr;">
+        <div class="img-frame" style="border-radius:4px;">
+            <img src="images/cerasus/photo_dsc0306.jpg" alt="Cerasus">
+        </div>
+        <div class="img-frame" style="border-radius:4px;">
+            <img src="images/cerasus/photo_dsc0323.jpg" alt="Cerasus">
+        </div>
+        <div class="img-frame" style="border-radius:4px;">
+            <img src="images/cerasus/photo_dsc0342.jpg" alt="Cerasus">
+        </div>
+        <div class="img-frame" style="border-radius:4px;">
+            <img src="images/cerasus/photo_dsc0295.jpg" alt="Cerasus">
+        </div>
+
+    </div>
+
+    <!-- ── CHAPTER 01 · THE BRIEF ── -->
+    <div class="chapter reveal">
+        <div class="chapter-rule">
+            <div class="chapter-num">01</div>
+            <div class="chapter-line"></div>
+            <div class="chapter-tag">The Brief</div>
+            <div class="chapter-line"></div>
+        </div>
+        <h2 class="chapter-title">The <em>Brief</em></h2>
+        <p class="chapter-sub">Ergonomics, form, and the language of a throne</p>
+    </div>
+
+    <div class="brief-layout reveal">
+        <div class="brief-meta">
+            <div class="brief-meta-item">
+                <div class="brief-meta-label">Project Type</div>
+                <div class="brief-meta-value">Sophomore Studio</div>
+            </div>
+            <div class="brief-meta-item">
+                <div class="brief-meta-label">Year</div>
+                <div class="brief-meta-value">2024</div>
+            </div>
+            <div class="brief-meta-item">
+                <div class="brief-meta-label">Duration</div>
+                <div class="brief-meta-value">7 Weeks</div>
+            </div>
+            <div class="brief-meta-item">
+                <div class="brief-meta-label">Instructor</div>
+                <div class="brief-meta-value">Jim Budd</div>
+            </div>
+            <div class="brief-meta-item">
+                <div class="brief-meta-label">Primary Material</div>
+                <div class="brief-meta-value">Cherry Wood</div>
+            </div>
+        </div>
+        <div class="brief-divider"></div>
+        <div class="brief-text">
+            <p class="brief-body">Design and build an ergonomically considered chair that comfortably fits a range of body types — balancing structural integrity, material choice, and inclusive sizing within a seven-week studio sprint.</p>
+            <div class="pull-quote">
+                <blockquote>"To build a chair that transcends traditional design, evoking the aura of a throne and symbolizing power. With its innovative silhouette and swift armrests, it embodies an empowering blend of elegance and comfort, perfect for asserting authority in any space."</blockquote>
+                <cite>Design Statement</cite>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── CHAPTER 02 · INSPIRATION ── -->
+    <div class="chapter reveal" style="padding-top:0;">
+        <div class="chapter-rule">
+            <div class="chapter-num">02</div>
+            <div class="chapter-line"></div>
+            <div class="chapter-tag">Inspiration</div>
+            <div class="chapter-line"></div>
+        </div>
+        <h2 class="chapter-title">The <em>Pipo</em> by Piegatto</h2>
+        <p class="chapter-sub">Sculpture as a starting point</p>
+    </div>
+
+    <div class="editorial-split wide-l reveal">
+        <div>
+            <div class="img-frame" style="border-radius: 4px;">
+                <img src="images/cerasus/sketch_main.jpg" alt="Pipo by Piegatto — inspiration">
+            </div>
+            <p class="img-caption">Pipo by Piegatto — the inspiration reference</p>
+        </div>
+        <div class="text-col">
+            <div class="small-label">The Reference</div>
+            <h3>Flowing lines, <em>throne-like</em> presence</h3>
+            <p>Inspired by the flowing, sculptural rhythm of the Pipo, its seamless layers and sense of movement became a starting point for my own interpretation of form and balance.</p>
+            <p>The smoothness of the curves and swift lines speak calmness and elegance — but the form and mass of the chair give it a throne-like look, making it perfect for asserting authority in any space.</p>
+            <div class="process-note">
+                <strong>Pipo by Piegatto</strong> — A sculptural lounge chair known for its layered wood construction and organic silhouette, exploring the relationship between mass and lightness.
+            </div>
+        </div>
+    </div>
+
+    <div class="rule"></div>
+
+    <!-- ── CHAPTER 03 · RESEARCH ── -->
+    <div class="chapter reveal" style="padding-top:0;">
+        <div class="chapter-rule">
+            <div class="chapter-num">03</div>
+            <div class="chapter-line"></div>
+            <div class="chapter-tag">Research</div>
+            <div class="chapter-line"></div>
+        </div>
+        <h2 class="chapter-title">How people <em>actually sit</em></h2>
+        <p class="chapter-sub">Observation as design input</p>
+    </div>
+
+    <div class="editorial-split reveal">
+        <div class="text-col">
+            <p>Nearly every lounge chair we observed exhibited a slant from the front of the chair to the back. When sitting in these, we naturally slide to the back of the chair to receive the back support offered.</p>
+            <p>Viewing lounge chairs as a tool for relaxation helped identify certain traits and design criteria — reclining angle, distance from knee to back, and height of the seating surface all became measurable design constraints.</p>
+        </div>
+        <div class="grid-3" style="gap: 12px;">
+            <div>
+                <div class="img-frame" style="border-radius:4px;">
+                    <img src="images/cerasus/research_img2543.jpg" alt="Research">
+                </div>
+            </div>
+            <div>
+                <div class="img-frame" style="border-radius:4px;">
+                    <img src="images/cerasus/research_ffc886.jpg" alt="Research">
+                </div>
+            </div>
+            <div>
+                <div class="img-frame" style="border-radius:4px;">
+                    <img src="images/cerasus/research_img2602.jpg" alt="Research">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="rule"></div>
+
+    <!-- ── MOODBOARD ── -->
+    <div class="chapter reveal" style="padding-top:0;">
+        <div class="chapter-rule">
+            <div class="chapter-num">04</div>
+            <div class="chapter-line"></div>
+            <div class="chapter-tag">Moodboard</div>
+            <div class="chapter-line"></div>
+        </div>
+        <h2 class="chapter-title">Visual <em>Language</em></h2>
+    </div>
+
+</main>
+
+<!-- MOODBOARD — full bleed -->
+<div class="page">
+    <div class="moodboard-grid reveal">
+        <div class="img-frame span-col" style="border-radius:4px;">
+            <img src="images/cerasus/mood_1.jpg" alt="Mood">
+        </div>
+        <div class="img-frame" style="border-radius:4px;">
+            <img src="images/cerasus/mood_2.jpg" alt="Mood">
+        </div>
+        <div class="img-frame" style="border-radius:4px;">
+            <img src="images/cerasus/mood_3.jpg" alt="Mood">
+        </div>
+        <div class="img-frame" style="border-radius:4px;">
+            <img src="images/cerasus/mood_4.jpg" alt="Mood">
+        </div>
+        <div class="img-frame" style="border-radius:4px;">
+            <img src="images/cerasus/mood_5.jpg" alt="Mood">
+        </div>
+    </div>
+</div>
+
+<main class="page">
+
+    <!-- ── CHAPTER 05 · THE MAKING ── -->
+    <div style="padding-top: 80px;" class="reveal">
+        <div class="chapter-rule">
+            <div class="chapter-num">05</div>
+            <div class="chapter-line"></div>
+            <div class="chapter-tag">Process</div>
+            <div class="chapter-line"></div>
+        </div>
+        <h2 class="chapter-title">The <em>Making</em></h2>
+        <p class="chapter-sub">From sketch to cherry wood</p>
+    </div>
+
+    <!-- CONCEPT & SKETCHES -->
+    <div class="process-chapter reveal">
+        <div class="process-step-num">01</div>
+        <div class="process-step-title">Concept &amp; Sketches</div>
+        <div class="editorial-split wide-l">
+            <div>
+                <div class="img-frame" style="border-radius:4px;">
+                    <img src="images/cerasus/concept_sketch.jpg" alt="Concept sketch">
+                </div>
+                <p class="img-caption">Initial concept ideation — exploring the throne silhouette</p>
+            </div>
+            <div class="text-col">
+                <p>The initial sketches explored the relationship between mass and elegance — how a chair can feel both powerful and inviting. The key challenge was translating the flowing curves of the Pipo reference into a buildable, structurally sound design.</p>
+                <div class="grid-2" style="gap:12px; margin-top:8px;">
+                    <div>
+                        <div class="img-frame" style="border-radius:4px;">
+                            <img src="images/cerasus/sketch_dsc0024.jpg" alt="Sketch models">
+                        </div>
+                        <p class="img-label">Sketch Models</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ERGONOMICS -->
+    <div class="process-chapter reveal">
+        <div class="process-step-num">02</div>
+        <div class="process-step-title">Ergonomics Testing</div>
+        <div class="editorial-split">
+            <div>
+                <div class="img-frame" style="border-radius:4px; overflow:hidden;">
+                    <img src="images/cerasus/ergo_box.jpg" alt="Ergo box" style="width:100%; aspect-ratio:4/3; object-fit:cover;">
+                </div>
+                <p class="img-caption">The ergo box — testing dimensions before committing to material</p>
+            </div>
+            <div class="text-col">
+                <p>I started with ergonomics testing to determine the best and most comfortable dimensions — including reclining angle, distance from knee to the back of the chair, and distance from feet to the highest point of the seating surface.</p>
+                <div class="grid-2" style="gap:12px; margin-top:8px;">
+                    <div>
+                        <div class="img-frame" style="border-radius:4px;">
+                            <img src="images/cerasus/measurements.jpg" alt="Rough measurements">
+                        </div>
+                        <p class="img-label">Rough Measurements</p>
+                    </div>
+                    <div>
+                        <div class="img-frame" style="border-radius:4px;">
+                            <img src="images/cerasus/shop_drawing.jpg" alt="Shop drawing">
+                        </div>
+                        <p class="img-label">Shop Drawing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROTOTYPING -->
+    <div class="process-chapter reveal">
+        <div class="process-step-num">03</div>
+        <div class="process-step-title">Scale Models &amp; Laser Cut</div>
+        <div class="grid-4" style="margin-bottom:20px;">
+            <div>
+                <div class="img-frame" style="border-radius:4px;">
+                    <img src="images/cerasus/scale_model_1.jpg" alt="Scale model" style="width:100%;height:auto;display:block;">
+                </div>
+                <p class="img-label">Scale Model</p>
+            </div>
+            <div>
+                <div class="img-frame" style="border-radius:4px;">
+                    <img src="images/cerasus/scale_model_2.jpg" alt="Scale model" style="width:100%;height:auto;display:block;">
+                </div>
+                <p class="img-label">Scale Model</p>
+            </div>
+            <div>
+                <div class="img-frame" style="border-radius:4px;">
+                    <img src="images/cerasus/scale_model_dsc0007.jpg" alt="Full scale" style="width:100%;height:auto;display:block;">
+                </div>
+                <p class="img-label">Full Scale</p>
+            </div>
+            <div>
+                <div class="img-frame" style="border-radius:4px;">
+                    <img src="images/cerasus/laser_cut_dsc0001.jpg" alt="Laser cut" style="width:100%;height:auto;display:block;">
+                </div>
+                <p class="img-label">Laser Cut Outline</p>
+            </div>
+        </div>
+        <div class="process-note">
+            Full-scale laser cut prototype used to check proportion — the ergo box validated human factor dimensions before any cherry wood was cut.
+        </div>
+    </div>
+
+    <!-- CNC -->
+    <div class="process-chapter reveal">
+        <div class="process-step-num">04</div>
+        <div class="process-step-title">CNC Machining</div>
+        <div class="grid-3">
+            <div>
+                <div class="img-frame" style="border-radius:4px;">
+                    <img src="images/cerasus/cnc_1.jpg" alt="CNC" style="width:100%;height:auto;display:block;">
+                </div>
+            </div>
+            <div>
+                <div class="img-frame" style="border-radius:4px;">
+                    <img src="images/cerasus/cnc_2.jpg" alt="CNC" style="width:100%;height:auto;display:block;">
+                </div>
+            </div>
+            <div>
+                <div class="img-frame" style="border-radius:4px;">
+                    <img src="images/cerasus/cnc_3.jpg" alt="CNC" style="width:100%;height:auto;display:block;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="rule"></div>
+
+    <!-- ── CHAPTER 06 · MATERIALS ── -->
+    <div class="chapter reveal" style="padding-top:0;">
+        <div class="chapter-rule">
+            <div class="chapter-num">06</div>
+            <div class="chapter-line"></div>
+            <div class="chapter-tag">Materials &amp; Joints</div>
+            <div class="chapter-line"></div>
+        </div>
+        <h2 class="chapter-title">Material <em>Decisions</em></h2>
+        <p class="chapter-sub">Cherry wood, domino joints, water-based polyurethane</p>
+    </div>
+
+</main>
+
+<div class="page">
+    <div class="material-spread reveal">
+        <div class="material-panel">
+            <img class="mat-img" src="images/cerasus/materials_dsc0034.jpg" alt="Domino joints">
+            <div class="mat-body">
+                <div class="mat-name">Domino Joints</div>
+                <div class="mat-props">
+                    <div class="mat-prop">Easy to drill precisely</div>
+                    <div class="mat-prop">Strong structural support</div>
+                    <div class="mat-prop">Precise alignment control</div>
+                </div>
+            </div>
+        </div>
+        <div class="material-panel">
+            <img class="mat-img" src="images/cerasus/materials_img11.jpg" alt="Cherry wood">
+            <div class="mat-body">
+                <div class="mat-name">Cherry Wood</div>
+                <div class="mat-props">
+                    <div class="mat-prop">Affordable &amp; widely available</div>
+                    <div class="mat-prop">Visually beautiful grain</div>
+                    <div class="mat-prop">Dense and structurally strong</div>
+                </div>
+            </div>
+        </div>
+        <div class="material-panel">
+            <img class="mat-img" src="images/cerasus/materials_img13.png" alt="Polyurethane finish" style="object-fit:contain;background:#fff;">
+            <div class="mat-body">
+                <div class="mat-name">Water-Based Polyurethane</div>
+                <div class="mat-props">
+                    <div class="mat-prop">Superior scratch resistance</div>
+                    <div class="mat-prop">Ultimate durability</div>
+                    <div class="mat-prop">Fastest dry time</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<main class="page">
+
+    <!-- ── CHAPTER 07 · ASSEMBLY + FINISH ── -->
+    <div class="chapter reveal">
+        <div class="chapter-rule">
+            <div class="chapter-num">07</div>
+            <div class="chapter-line"></div>
+            <div class="chapter-tag">Assembly &amp; Finish</div>
+            <div class="chapter-line"></div>
+        </div>
+        <h2 class="chapter-title">Building the <em>Form</em></h2>
+    </div>
+
+    <div class="grid-4 reveal" style="margin-bottom:20px;">
+        <div>
+            <div class="img-frame" style="border-radius:8px; aspect-ratio:4/3; overflow:hidden;">
+                <img src="images/cerasus/assembly_1.jpg" alt="Assembly" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <p class="img-label">Assembly</p>
+        </div>
+        <div>
+            <div class="img-frame" style="border-radius:8px; aspect-ratio:4/3; overflow:hidden;">
+                <img src="images/cerasus/assembly_2.jpg" alt="Assembly" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <p class="img-label">Assembly</p>
+        </div>
+        <div>
+            <div class="img-frame" style="border-radius:8px; aspect-ratio:4/3; overflow:hidden;">
+                <img src="images/cerasus/assembly_3.jpg" alt="Assembly" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <p class="img-label">Assembly</p>
+        </div>
+        <div>
+            <div class="img-frame" style="border-radius:8px; aspect-ratio:4/3; overflow:hidden;">
+                <img src="images/cerasus/assembly_4.jpg" alt="Assembly" style="width:100%;height:100%;object-fit:cover;object-position:center bottom;display:block;">
+            </div>
+            <p class="img-label">Assembly</p>
+        </div>
+    </div>
+
+    <div class="reveal" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+        <div>
+            <div class="img-frame" style="border-radius:8px; aspect-ratio:4/3; overflow:hidden;">
+                <img src="images/cerasus/finish_1.jpg" alt="Detail sanding" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <p class="img-label">Detail Sanding</p>
+        </div>
+        <div>
+            <div class="img-frame" style="border-radius:8px; aspect-ratio:4/3; overflow:hidden;">
+                <img src="images/cerasus/finish_2.jpg" alt="Chair in the studio" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <p class="img-label">Studio Assembly</p>
+        </div>
+        <div>
+            <div class="img-frame" style="border-radius:8px; aspect-ratio:4/3; overflow:hidden;">
+                <img src="images/cerasus/finish_4.jpg" alt="Finished chair" style="width:100%;height:100%;object-fit:cover;object-position:center 85%;display:block;">
+            </div>
+            <p class="img-label">Stained &amp; Finished</p>
+        </div>
+    </div>
+
+    <!-- ── CHAPTER 08 · FINAL PRODUCT ── -->
+    <div class="chapter reveal">
+        <div class="chapter-rule">
+            <div class="chapter-num">08</div>
+            <div class="chapter-line"></div>
+            <div class="chapter-tag">Final Product</div>
+            <div class="chapter-line"></div>
+        </div>
+        <h2 class="chapter-title">The <em>Cerasus</em></h2>
+        <p class="chapter-sub">Cherry wood. Flowing form. A throne for any space.</p>
+    </div>
+
+</main>
+
+<!-- HERO FINAL PHOTO — full bleed feel -->
+<div class="page">
+    <div class="reveal">
+        <div class="img-frame" style="border-radius: 6px; overflow:hidden;">
+            <img class="gallery-cover" src="images/cerasus/photo_dsc0297.jpg" alt="Cerasus final">
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:12px; padding-bottom: 8px; border-bottom: 1px solid var(--rule);">
+            <p class="img-caption">Cerasus — Khaled Abdul Rahman, Spring 2024</p>
+            <p class="img-caption">Cherry wood &nbsp;·&nbsp; Oil-based polyurethane finish</p>
+        </div>
+    </div>
+
+</div>
+
+    <div style="text-align:center;padding:40px 0 60px;">
+        <a href="https://drive.google.com/file/d/13ACbFs61kVbGqyuGOj39X69x5Hs_bDGa/view?usp=sharing" target="_blank" style="display:inline-block;padding:14px 32px;border:1px solid var(--rule);border-radius:8px;color:var(--ink-1);text-decoration:none;font-size:14px;letter-spacing:0.06em;background:var(--paper-2);transition:background 0.2s;">View Full Process Book</a>
+    </div>
+
+<!-- FOOTER -->
+<footer>
+    <p>Cerasus &nbsp;·&nbsp; Khaled Abdul Rahman &nbsp;·&nbsp; Spring 2024 &nbsp;·&nbsp; Georgia Tech College of Design</p>
+    <a href="index.html" class="footer-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+        Back to Portfolio
+    </a>
+</footer>
+
+<script>
+    // Masthead scroll
+    const masthead = document.getElementById('masthead');
+    window.addEventListener('scroll', () => {
+        masthead.style.borderBottomColor = window.scrollY > 10 ? 'var(--rule)' : 'transparent';
+    }, { passive: true });
+
+    // Hero parallax
+    const heroPhoto = document.getElementById('heroPhoto');
+    window.addEventListener('scroll', () => {
+        heroPhoto.style.transform = `scale(1.04) translateY(${window.scrollY * 0.28}px)`;
+    }, { passive: true });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+        });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

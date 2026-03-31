@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central — KA Design Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:      #060810;
+            --glass:   rgba(255,255,255,0.048);
+            --glass-2: rgba(255,255,255,0.028);
+            --glass-b: rgba(255,255,255,0.085);
+            --blur:    blur(28px) saturate(160%);
+            --ink:     #EAF0FF;
+            --ink-2:   rgba(234,240,255,0.52);
+            --ink-3:   rgba(234,240,255,0.26);
+            --accent:  #5B8EFF;
+            --rule:    rgba(255,255,255,0.07);
+            --font-d:  'Syne', sans-serif;
+            --font-b:  'Inter', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: var(--font-b);
+            font-size: 16px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+        ::selection { background: var(--accent); color: #fff; }
+
+        /* ═══ ORB BACKGROUND ═══ */
+        .bg-orbs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(110px); opacity: 0.32; }
+        .orb-1 { width: 700px; height: 700px; background: #1840CC; top: -20%; left: -10%; animation: drift1 20s ease-in-out infinite alternate; }
+        .orb-2 { width: 480px; height: 480px; background: #4070FF; top: 15%; right: -5%; animation: drift2 15s ease-in-out infinite alternate; }
+        .orb-3 { width: 400px; height: 400px; background: #0828A0; bottom: 25%; left: 15%; animation: drift3 24s ease-in-out infinite alternate; }
+        .orb-4 { width: 320px; height: 320px; background: #6040CC; bottom: -8%; right: 18%; animation: drift4 18s ease-in-out infinite alternate; }
+        .orb-5 { width: 260px; height: 260px; background: #2050E8; top: 55%; left: 45%; animation: drift5 21s ease-in-out infinite alternate; }
+
+        @keyframes drift1 { from{transform:translate(0,0)} to{transform:translate(70px,90px)} }
+        @keyframes drift2 { from{transform:translate(0,0)} to{transform:translate(-80px,60px)} }
+        @keyframes drift3 { from{transform:translate(0,0)} to{transform:translate(50px,-80px)} }
+        @keyframes drift4 { from{transform:translate(0,0)} to{transform:translate(-60px,-50px)} }
+        @keyframes drift5 { from{transform:translate(0,0)} to{transform:translate(40px,50px)} }
+
+        /* ═══ NAV PILL ═══ */
+        .nav-pill {
+            position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+            z-index: 100;
+            display: flex; align-items: center;
+            background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b); border-radius: 100px;
+            overflow: hidden; white-space: nowrap;
+        }
+        .nav-back {
+            display: flex; align-items: center; gap: 7px; padding: 10px 20px;
+            font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--ink-2); text-decoration: none; transition: color 0.2s, background 0.2s;
+        }
+        .nav-back:hover { color: var(--accent); background: rgba(91,142,255,0.07); }
+        .nav-back svg { width: 11px; height: 11px; }
+        .nav-sep { width: 1px; height: 28px; background: var(--rule); }
+        .nav-brand { padding: 10px 20px; font-family: var(--font-d); font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+        .nav-brand span { color: var(--accent); }
+        .nav-title { padding: 10px 20px; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; color: var(--ink-3); text-transform: uppercase; }
+
+        /* ═══ HERO ═══ */
+        .case-hero {
+            height: 100vh; position: relative; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: flex-end;
+        }
+        .hero-photo {
+            position: absolute; inset: 0;
+            background: url('images/evtol/hero.jpg') center center / cover no-repeat;
+            transform-origin: 58% 45%;
+            animation: heroZoom 18s ease-in-out infinite alternate;
+        }
+        @keyframes heroZoom {
+            from { transform: scale(1.0); }
+            to   { transform: scale(1.14); }
+        }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom, rgba(6,8,16,0.4) 0%, rgba(6,8,16,0.05) 30%, rgba(6,8,16,0.6) 65%, rgba(6,8,16,0.97) 100%);
+        }
+        .hero-scan {
+            position: absolute; inset: 0;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
+            pointer-events: none;
+        }
+        .hud-corner { position: absolute; width: 32px; height: 32px; pointer-events: none; }
+        .hud-tl { top: 80px; left: 40px; border-top: 1.5px solid var(--accent); border-left: 1.5px solid var(--accent); opacity: 0.45; }
+        .hud-tr { top: 80px; right: 40px; border-top: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); opacity: 0.45; }
+        .hud-bl { bottom: 40px; left: 40px; border-bottom: 1.5px solid var(--accent); border-left: 1.5px solid var(--accent); opacity: 0.45; }
+        .hud-br { bottom: 40px; right: 40px; border-bottom: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); opacity: 0.45; }
+
+        .hero-content {
+            position: relative; z-index: 2;
+            padding: 0 72px 80px;
+            display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;
+        }
+        .hero-left { flex: 1; }
+        .hero-eyebrow {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 10px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 16px;
+            opacity: 0; animation: fadeUp 0.9s 0.35s forwards;
+        }
+        .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+        .hero-title {
+            font-family: var(--font-d); font-weight: 800;
+            font-size: clamp(52px, 8.5vw, 116px);
+            line-height: 0.88; letter-spacing: -0.04em; color: var(--ink);
+            margin-bottom: 24px;
+            opacity: 0; animation: fadeUp 0.9s 0.5s forwards;
+        }
+        .hero-title .accent-word { color: var(--accent); }
+        .hero-tagline {
+            font-size: clamp(14px, 1.4vw, 18px); color: var(--ink-2);
+            font-weight: 400; letter-spacing: 0.02em;
+            opacity: 0; animation: fadeUp 0.9s 0.65s forwards;
+        }
+        .hero-right {
+            display: flex; flex-direction: column; align-items: flex-end; gap: 20px;
+            opacity: 0; animation: fadeUp 0.9s 0.8s forwards;
+        }
+        .hero-meta-row { display: flex; flex-direction: column; align-items: flex-end; }
+        .hero-meta-label { font-size: 8px; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 3px; }
+        .hero-meta-value { font-family: var(--font-d); font-size: 13px; font-weight: 600; color: rgba(234,240,255,0.88); }
+
+        /* ═══ PAGE ═══ */
+        .page { max-width: 1320px; margin: 0 auto; padding: 0 72px; position: relative; z-index: 1; }
+
+        /* ═══ SECTION ═══ */
+        .section { padding: 96px 0 56px; }
+        .section-hud { display: flex; align-items: center; gap: 0; margin-bottom: 28px; }
+        .section-num { font-family: var(--font-d); font-size: 11px; font-weight: 700; letter-spacing: 0.18em; color: var(--accent); padding-right: 16px; }
+        .section-line { flex: 1; height: 1px; background: var(--rule); position: relative; }
+        .section-line::after { content: ''; position: absolute; left: 0; top: 0; width: 40px; height: 1px; background: var(--accent); opacity: 0.4; }
+        .section-tag { font-size: 9px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-3); padding: 0 20px; }
+        .section-title { font-family: var(--font-d); font-size: clamp(34px, 4.5vw, 68px); font-weight: 800; letter-spacing: -0.03em; line-height: 0.95; color: var(--ink); margin-bottom: 12px; }
+        .section-title em { font-style: normal; color: var(--accent); }
+        .section-sub { font-size: 14px; color: var(--ink-3); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+
+        /* ═══ RULE ═══ */
+        .rule { height: 1px; background: linear-gradient(90deg, transparent, var(--rule) 20%, var(--rule) 80%, transparent); margin: 80px 0; }
+
+        /* ═══ SPLIT ═══ */
+        .split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+        .split.wide-l { grid-template-columns: 1.4fr 1fr; }
+        .split.wide-r { grid-template-columns: 1fr 1.4fr; }
+        .text-col { display: flex; flex-direction: column; gap: 20px; }
+        .eyebrow-tag { font-size: 9px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent); }
+        .text-col h3 { font-family: var(--font-d); font-size: clamp(22px, 2.4vw, 34px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+        .text-col h3 em { font-style: normal; color: var(--accent); }
+        .text-col p { font-size: 14px; color: var(--ink-2); line-height: 1.9; }
+
+        /* ═══ GLASS CARD ═══ */
+        .glass-card {
+            background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b); border-radius: 16px; overflow: hidden;
+        }
+
+        /* ═══ STAT STRIP ═══ */
+        .stat-strip {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b); border-radius: 16px; overflow: hidden;
+        }
+        .stat-item {
+            padding: 32px 36px;
+            border-right: 1px solid var(--rule);
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-num { font-family: var(--font-d); font-size: clamp(32px, 4vw, 52px); font-weight: 800; letter-spacing: -0.04em; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+        .stat-label { font-size: 11px; color: var(--ink-2); font-weight: 400; letter-spacing: 0.04em; }
+
+        /* ═══ RESEARCH Q ═══ */
+        .research-q {
+            background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b); border-left: 2px solid var(--accent);
+            border-radius: 0 16px 16px 0; padding: 32px 40px; margin: 40px 0;
+        }
+        .research-q .rq-label { font-size: 9px; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+        .research-q p { font-family: var(--font-d); font-size: clamp(16px, 1.8vw, 22px); font-weight: 600; line-height: 1.55; color: var(--ink); letter-spacing: -0.01em; }
+
+        /* ═══ IMAGE FRAME ═══ */
+        .img-frame { background: var(--glass-2); border: 1px solid var(--glass-b); border-radius: 12px; overflow: hidden; }
+        .img-frame img { width: 100%; display: block; transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94); }
+        .img-frame:hover img { transform: scale(1.025); }
+        .img-caption { font-size: 11px; color: var(--ink-3); margin-top: 10px; letter-spacing: 0.06em; }
+
+        /* ═══ EXPERT CARDS ═══ */
+        .expert-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .expert-card {
+            background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b); border-radius: 16px; overflow: hidden;
+            display: grid; grid-template-columns: 120px 1fr;
+            transition: border-color 0.3s;
+        }
+        .expert-card:hover { border-color: rgba(91,142,255,0.3); }
+        .expert-card img { width: 120px; height: 100%; object-fit: cover; display: block; filter: grayscale(20%); }
+        .expert-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+        .expert-name { font-family: var(--font-d); font-size: 17px; font-weight: 700; letter-spacing: -0.02em; }
+        .expert-role { font-size: 11px; color: var(--accent); font-weight: 500; letter-spacing: 0.06em; margin-bottom: 4px; }
+        .expert-bio { font-size: 13px; color: var(--ink-2); line-height: 1.75; }
+
+
+        /* ═══ WHITESPACE MAP ═══ */
+        .whitespace-map {
+            position: relative;
+            width: 100%;
+            height: 580px;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+        .ws-line {
+            position: absolute; background: rgba(255,255,255,0.09); pointer-events: none; z-index: 1;
+        }
+        .ws-line-h { left: 0; right: 0; top: 50%; height: 1px; }
+        .ws-line-v { top: 0; bottom: 0; left: 50%; width: 1px; }
+
+        /* axis labels — ends of each axis */
+        .ws-ax {
+            position: absolute; z-index: 2;
+            font-size: 11px; line-height: 1.35; color: var(--ink-3);
+        }
+        .ws-ax strong { display: block; font-family: var(--font-d); font-size: 13px; font-weight: 700; color: var(--ink-2); }
+        .ws-ax sub { font-size: 9px; opacity: 0.9; font-style: normal; }
+        .ws-ax.left   { left: 24px;  top: 50%; transform: translateY(-50%); text-align: left; }
+        .ws-ax.right  { right: 24px; top: 50%; transform: translateY(-50%); text-align: right; }
+        .ws-ax.top    { top: 20px;   left: 50%; transform: translateX(-50%); text-align: center; }
+        .ws-ax.bottom { bottom: 20px; left: 50%; transform: translateX(-50%); text-align: left; }
+
+        /* quadrant notes */
+        .ws-qnote {
+            position: absolute; z-index: 2;
+            font-size: 9px; color: var(--ink-3); line-height: 1.6;
+            max-width: 200px;
+        }
+        .ws-qnote.accent { color: rgba(91,142,255,0.65); }
+        .ws-qnote.tl { top: 56px;    left: 28px; }
+        .ws-qnote.tr { top: 56px;    right: 28px; text-align: right; }
+        .ws-qnote.bl { bottom: 56px; left: 28px; }
+        .ws-qnote.br { bottom: 56px; right: 28px; text-align: right; }
+
+        /* opportunity */
+        .ws-opp {
+            position: absolute; z-index: 3;
+            left: 25%; top: 28%; transform: translate(-50%, -50%);
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+        }
+        .ws-opp-ring {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 1.5px dashed rgba(91,142,255,0.45);
+            background: rgba(91,142,255,0.05);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+        }
+        .ws-opp-ring span:first-child { font-size: 22px; color: var(--accent); }
+        .ws-opp-ring span:last-child  { font-family: var(--font-d); font-size: 9px; font-weight: 700; letter-spacing: 0.08em; color: var(--accent); }
+        .ws-opp-desc { font-size: 9px; color: rgba(91,142,255,0.55); text-align: center; line-height: 1.55; max-width: 120px; }
+
+        /* aircraft cards */
+        .ws-ac {
+            position: absolute; z-index: 4;
+            transform: translate(-50%, -50%);
+            width: 110px;
+            background: rgba(20,25,45,0.75);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px; overflow: hidden;
+            transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+        .ws-ac:hover { border-color: rgba(91,142,255,0.4); transform: translate(-50%,-50%) scale(1.08); box-shadow: 0 8px 24px rgba(0,0,0,0.4); z-index: 10; }
+        .ws-ac.hl    { border-color: rgba(91,142,255,0.55); box-shadow: 0 0 18px rgba(91,142,255,0.18); }
+        .ws-ac img   { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; transform: scale(1.12); }
+        .ws-ac-n { font-family: var(--font-d); font-size: 10px; font-weight: 700; padding: 5px 8px 1px; color: var(--ink); }
+        .ws-ac-c { font-size: 9px; color: var(--ink-3); padding: 0 8px 6px; }
+
+        /* ═══ PERSONA CARDS ═══ */
+        .persona-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+        .persona-card {
+            background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b); border-radius: 16px; overflow: hidden;
+            position: relative;
+            display: grid; grid-template-columns: 200px 1fr;
+            height: 420px;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .persona-card:hover { border-color: rgba(91,142,255,0.25); transform: translateY(-4px); }
+        .persona-card::after { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--accent), transparent); }
+        .persona-photo { width: 200px; height: 100%; object-fit: cover; object-position: center top; display: block; filter: grayscale(15%); }
+        .persona-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 14px; }
+        .persona-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+        .persona-name { font-family: var(--font-d); font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
+        .persona-age { font-size: 11px; color: var(--accent); font-weight: 600; letter-spacing: 0.1em; margin-top: 4px; }
+        .persona-location { font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em; }
+        .persona-traits { display: flex; flex-direction: column; gap: 5px; }
+        .persona-trait { font-size: 11px; color: var(--ink-2); display: flex; align-items: center; gap: 8px; }
+        .persona-trait::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; box-shadow: 0 0 5px rgba(91,142,255,0.5); }
+        .persona-bio { font-size: 13px; color: var(--ink-2); line-height: 1.8; }
+        .persona-quote {
+            background: var(--glass-2); border: 1px solid var(--rule);
+            border-left: 2px solid var(--accent); border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            font-family: var(--font-d); font-size: 13px; font-weight: 600;
+            color: var(--ink); line-height: 1.5; font-style: italic;
+        }
+
+        /* ═══ TREND FLOW ═══ */
+        .trend-flow {
+            background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b); border-radius: 16px;
+            padding: 36px 40px; display: flex; align-items: center; gap: 0;
+        }
+        .trend-node { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .trend-tag { font-size: 9px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-3); }
+        .trend-label { font-family: var(--font-d); font-size: clamp(14px, 1.4vw, 18px); font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
+        .trend-arrow { font-size: 20px; color: var(--accent); padding: 0 16px; opacity: 0.6; flex-shrink: 0; }
+        .trend-node.highlight .trend-label { color: var(--accent); }
+
+        /* ═══ FOOTER ═══ */
+        footer {
+            position: relative; z-index: 1;
+            border-top: 1px solid var(--rule); padding: 32px 72px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(6,8,16,0.6); backdrop-filter: blur(20px);
+        }
+        footer p { font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em; }
+        .footer-back {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--ink-2); text-decoration: none; transition: color 0.2s;
+        }
+        .footer-back:hover { color: var(--accent); }
+        .footer-back svg { width: 13px; height: 13px; }
+
+        /* ═══ ANIMATIONS ═══ */
+        @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+        .reveal { opacity:0; transform:translateY(32px); transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1); }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .d1{transition-delay:0.08s} .d2{transition-delay:0.16s} .d3{transition-delay:0.24s}
+
+        /* ═══ RESPONSIVE ═══ */
+        @media(max-width:1024px){
+            .page{padding:0 40px} .hero-content{padding:0 40px 60px}
+            .split,.split.wide-l,.split.wide-r{grid-template-columns:1fr;gap:32px}
+            .expert-card{grid-template-columns:1fr}
+            .expert-card img{width:100%;height:200px}
+            footer{padding:24px 40px}
+        }
+        @media(max-width:768px){
+            .nav-title{display:none}
+            .page{padding:0 20px} .hero-content{padding:0 20px 48px} .hero-right{display:none}
+            .stat-strip{grid-template-columns:1fr}
+            .stat-item{border-right:none;border-bottom:1px solid var(--rule)}
+            .stat-item:last-child{border-bottom:none}
+            .expert-grid,.persona-grid{grid-template-columns:1fr}
+            .hud-tl,.hud-tr,.hud-bl,.hud-br{display:none}
+            footer{flex-direction:column;gap:12px;padding:20px;text-align:center}
+        }
+    </style>
+</head>
+<body>
+
+<!-- BACKGROUND ORBS -->
+<div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="orb orb-5"></div>
+</div>
+
+<!-- WIP BANNER -->
+<div style="position:fixed;bottom:24px;right:24px;z-index:200;background:rgba(91,142,255,0.12);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(91,142,255,0.3);border-radius:100px;padding:8px 18px;font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#5B8EFF;">
+    Work in Progress
+</div>
+
+<!-- NAV PILL -->
+<nav class="nav-pill">
+    <a href="index.html" class="nav-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+        Portfolio
+    </a>
+    <div class="nav-sep"></div>
+    <a href="index.html" class="nav-brand">K<span>A</span></a>
+    <div class="nav-sep"></div>
+    <span class="nav-title">Central</span>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<div class="case-hero">
+    <div class="hero-photo" id="heroPhoto"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-scan"></div>
+    <div class="hud-corner hud-tl"></div>
+    <div class="hud-corner hud-tr"></div>
+    <div class="hud-corner hud-bl"></div>
+    <div class="hud-corner hud-br"></div>
+    <div class="hero-content">
+        <div class="hero-left">
+            <p class="hero-eyebrow">Capstone &nbsp;·&nbsp; Spring 2026 &nbsp;·&nbsp; Georgia Tech</p>
+            <h1 class="hero-title"><span class="accent-word">Central</span></h1>
+            <p class="hero-tagline">UX Migration from Automobiles to eVTOL — Stop being the pilot, become the operator</p>
+            <p style="margin-top:14px;font-size:11px;color:var(--ink-3);letter-spacing:0.08em;">Project in progress &nbsp;·&nbsp; Hero image AI generated by ChatGPT</p>
+        </div>
+        <div class="hero-right">
+            <div class="hero-meta-row">
+                <span class="hero-meta-label">Role</span>
+                <span class="hero-meta-value">Industrial Designer</span>
+            </div>
+            <div class="hero-meta-row">
+                <span class="hero-meta-label">Type</span>
+                <span class="hero-meta-value">UX / Product Design</span>
+            </div>
+            <div class="hero-meta-row">
+                <span class="hero-meta-label">Year</span>
+                <span class="hero-meta-value">Spring 2026</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ CONTENT ═══ -->
+<main class="page">
+
+    <!-- ── 01 · CONTEXT ── -->
+    <div class="section reveal">
+        <div class="section-hud">
+            <span class="section-num">01</span>
+            <div class="section-line"></div>
+            <span class="section-tag">Context</span>
+            <div class="section-line"></div>
+        </div>
+        <h2 class="section-title">Shift from <em>direct control</em><br>to trajectory command</h2>
+        <p class="section-sub">UX Migration · Automobiles → eVTOL</p>
+    </div>
+
+    <!-- STAT STRIP -->
+    <div class="stat-strip reveal">
+        <div class="stat-item">
+            <div class="stat-num">$41.8B</div>
+            <div class="stat-label">Projected global eVTOL market by 2030</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">SVO</div>
+            <div class="stat-label">Simplified Vehicle Operations — the emerging standard</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">0→1</div>
+            <div class="stat-label">Designing the cabin experience from scratch</div>
+        </div>
+    </div>
+
+    <!-- TREND FLOW -->
+    <div class="trend-flow reveal" style="margin-top: 12px;">
+        <div class="trend-node">
+            <div class="trend-tag">Trend A</div>
+            <div class="trend-label">Automobile Driver</div>
+        </div>
+        <div class="trend-arrow">→</div>
+        <div class="trend-node highlight">
+            <div class="trend-tag">Outcome</div>
+            <div class="trend-label">Operator</div>
+        </div>
+        <div class="trend-arrow">·</div>
+        <div class="trend-node">
+            <div class="trend-tag">Trend B</div>
+            <div class="trend-label">Analog Cockpit</div>
+        </div>
+        <div class="trend-arrow">→</div>
+        <div class="trend-node highlight">
+            <div class="trend-tag">Outcome</div>
+            <div class="trend-label">Digital Cockpit</div>
+        </div>
+    </div>
+
+    <!-- RESEARCH QUESTION -->
+    <div class="research-q reveal">
+        <div class="rq-label">Research Question</div>
+        <p>How can the design of an intuitive cabin ecosystem help mitigate cognitive overload and accelerate the learning curve for drivers transitioning to personal eVTOL flight?</p>
+    </div>
+
+    <div class="rule"></div>
+
+    <!-- ── 02 · RESEARCH ── -->
+    <div class="section reveal" style="padding-top:0;">
+        <div class="section-hud">
+            <span class="section-num">02</span>
+            <div class="section-line"></div>
+            <span class="section-tag">Research</span>
+            <div class="section-line"></div>
+        </div>
+        <h2 class="section-title">Experts &amp; <em>Competition</em></h2>
+        <p class="section-sub">Industry interviews · Competitive landscape</p>
+    </div>
+
+    <!-- EXPERT INTERVIEWS -->
+    <div class="expert-grid reveal">
+        <div class="expert-card">
+            <img src="images/evtol/expert_bria.jpg" alt="Bria McKouen">
+            <div class="expert-body">
+                <div class="expert-role">Lead UX Designer · Ford Motor Company</div>
+                <div class="expert-name">Bria McKouen</div>
+                <p class="expert-bio">Creates intuitive, research-driven digital experiences, blending user-centered design with strong product thinking and cross-functional collaboration.</p>
+            </div>
+        </div>
+        <div class="expert-card">
+            <img src="images/evtol/expert_andreas.jpg" alt="Andreas Haslbeck">
+            <div class="expert-body">
+                <div class="expert-role">Manager User Research · Yanfeng</div>
+                <div class="expert-name">Andreas Haslbeck</div>
+                <p class="expert-bio">Human factors specialist focused on UX research and ergonomics, with professional experience at Yanfeng and an academic background from Technische Universität München.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPETITION WHITESPACE MAP -->
+    <div class="whitespace-map reveal glass-card" style="margin-top: 40px;">
+
+        <!-- grid lines -->
+        <div class="ws-line ws-line-h"></div>
+        <div class="ws-line ws-line-v"></div>
+
+        <!-- axis end labels -->
+        <div class="ws-ax left" style="display:flex;flex-direction:column;gap:6px;">
+            Designed for<strong>Tomorrow</strong>
+            <span style="font-size:9px;color:rgba(91,142,255,0.65);max-width:180px;line-height:1.5;">This represents a shift toward Simplified Vehicle Operations (SVO) and highly intuitive interfaces, and integrated infrastructure.</span>
+        </div>
+        <div class="ws-ax right" style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+            Designed for<strong>Today</strong>
+            <span style="font-size:9px;color:var(--ink-2);max-width:180px;text-align:right;line-height:1.5;">layouts, controls, and avionics (like the Garmin G3000) that are familiar to current certified pilots.</span>
+        </div>
+        <div class="ws-ax top" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;">
+            <strong>Heavy</strong>
+            <sub>FAA License Required</sub>
+            <span style="font-size:9px;color:var(--ink-2);opacity:1;max-width:200px;text-align:left;line-height:1.5;">aircraft certified under formal aviation standards, PPL required.</span>
+        </div>
+        <div class="ws-ax bottom" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;">
+            <strong>Ultralight</strong>
+            <sub>No License, Restrictions</sub>
+            <span style="font-size:9px;color:var(--ink-2);opacity:1;max-width:200px;text-align:left;line-height:1.5;">designed to fall under FAA Part 103 regulations. They do not require a formal pilot's license.</span>
+        </div>
+
+        <!-- quadrant notes -->
+
+
+        <!-- opportunity -->
+        <div class="ws-opp">
+            <div class="ws-opp-ring">
+                <span>★</span>
+                <span>Opportunity</span>
+            </div>
+        </div>
+
+        <!-- Heavy / Today -->
+        <div class="ws-ac" style="left:62%;top:22%;">
+            <img src="images/evtol/ac_midnight.jpg" alt="Midnight">
+            <div class="ws-ac-n">Midnight</div>
+            <div class="ws-ac-c">Archer</div>
+        </div>
+        <div class="ws-ac" style="left:79%;top:18%;">
+            <img src="images/evtol/ac_joby.jpg" alt="AirOne">
+            <div class="ws-ac-n">AirOne</div>
+            <div class="ws-ac-c">Aero</div>
+        </div>
+
+        <!-- Middle / Today (highlighted) -->
+        <div class="ws-ac hl" style="left:72%;top:50%;">
+            <img src="images/evtol/ac_rictor.jpg" alt="Joby">
+            <div class="ws-ac-n">Joby Aircraft</div>
+            <div class="ws-ac-c">Joby Aviation</div>
+        </div>
+
+        <!-- Ultralight / Today -->
+        <div class="ws-ac" style="left:65%;top:76%;">
+            <img src="images/evtol/ac_airone.png" alt="Rictor X4">
+            <div class="ws-ac-n">Rictor X4</div>
+            <div class="ws-ac-c">Rictor</div>
+        </div>
+
+        <!-- Ultralight / Tomorrow -->
+        <div class="ws-ac" style="left:32%;top:74%;">
+            <img src="images/evtol/ac_pivotal.jpg" alt="PIVOTAL">
+            <div class="ws-ac-n">PIVOTAL</div>
+            <div class="ws-ac-c">Pivotal</div>
+        </div>
+
+    </div>
+
+    <div class="rule"></div>
+
+    <!-- ── 03 · USERS ── -->
+    <div class="section reveal" style="padding-top:0;">
+        <div class="section-hud">
+            <span class="section-num">03</span>
+            <div class="section-line"></div>
+            <span class="section-tag">Users &amp; Target Market</span>
+            <div class="section-line"></div>
+        </div>
+        <h2 class="section-title">Who are we <em>designing for?</em></h2>
+        <p class="section-sub">Two personas · Two extremes · One design challenge</p>
+    </div>
+
+    <div class="persona-grid reveal">
+
+        <div class="persona-card">
+            <img class="persona-photo" src="images/evtol/persona_selene.jpg" alt="Selene Eid">
+            <div class="persona-body">
+                <div class="persona-header">
+                    <div>
+                        <div class="persona-name">Selene Eid</div>
+                        <div class="persona-age">29 &nbsp;·&nbsp; Bellevue, WA</div>
+                    </div>
+                </div>
+                <div class="persona-traits">
+                    <div class="persona-trait">Extreme sports athlete</div>
+                    <div class="persona-trait">Has adrenaline for dinner</div>
+                    <div class="persona-trait">Owns a firm in Aspen, CO</div>
+                </div>
+                <p class="persona-bio">Rejecting the 'flying taxi' model, Selene demands a high-performance machine for reckless bush flying. She seeks total agency to push the aircraft to its limits in remote, off-grid wilderness.</p>
+                <div class="persona-quote">"Autonomy is a loss of agency. I don't want to be flown; I want to 'drive'."</div>
+            </div>
+        </div>
+
+        <div class="persona-card">
+            <img class="persona-photo" src="images/evtol/persona_luke.jpg" alt="Luke Spears">
+            <div class="persona-body">
+                <div class="persona-header">
+                    <div>
+                        <div class="persona-name">Luke Spears</div>
+                        <div class="persona-age">45 &nbsp;·&nbsp; Denver, CO</div>
+                    </div>
+                </div>
+                <div class="persona-traits">
+                    <div class="persona-trait">Sr. Designer</div>
+                    <div class="persona-trait">Enjoys Golf and Tennis</div>
+                    <div class="persona-trait">Car Technician background</div>
+                </div>
+                <p class="persona-bio">Embracing the "seamless mobility" model, Luke demands a high-reliability system for stress-free urban commuting. He seeks total safety within a predictive, off-load ecosystem far from the risks of manual error.</p>
+                <div class="persona-quote">"The vehicle should be a silent utility. Should be no harder than driving a car."</div>
+            </div>
+        </div>
+
+    </div>
+    <p style="font-size:11px;color:var(--ink-3);margin-top:10px;letter-spacing:0.06em;">AI generated by ChatGPT</p>
+
+    <div style="padding-bottom: 104px;"></div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <p>Central &nbsp;·&nbsp; Khaled Abdul Rahman &nbsp;·&nbsp; Spring 2026</p>
+    <a href="index.html" class="footer-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+        Back to Portfolio
+    </a>
+</footer>
+
+<script>
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+        });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

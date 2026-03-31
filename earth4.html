@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4earth HMI — KA Design Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:      #060A12;
+            --glass:   rgba(255,255,255,0.048);
+            --glass-2: rgba(255,255,255,0.032);
+            --glass-b: rgba(255,255,255,0.088);
+            --blur:    blur(28px) saturate(160%);
+            --ink:     #E8F0FF;
+            --ink-2:   rgba(232,240,255,0.52);
+            --ink-3:   rgba(232,240,255,0.26);
+            --accent:  #00CFFF;
+            --accent-d:#007AA0;
+            --rule:    rgba(255,255,255,0.07);
+            --font-d:  'Syne', sans-serif;
+            --font-b:  'Inter', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: var(--font-b);
+            font-size: 16px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+        ::selection { background: var(--accent); color: #000; }
+
+        /* ═══ ANIMATED ORB BACKGROUND ═══ */
+        .bg-orbs {
+            position: fixed; inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(110px);
+            opacity: 0.38;
+        }
+        .orb-1 { width: 640px; height: 640px; background: #0060FF; top: -15%; left: -10%; animation: drift1 18s ease-in-out infinite alternate; }
+        .orb-2 { width: 500px; height: 500px; background: #00CFFF; top: 20%; right: -8%; animation: drift2 14s ease-in-out infinite alternate; }
+        .orb-3 { width: 420px; height: 420px; background: #0040B8; bottom: 20%; left: 10%; animation: drift3 22s ease-in-out infinite alternate; }
+        .orb-4 { width: 360px; height: 360px; background: #00FFD0; bottom: -10%; right: 20%; animation: drift4 16s ease-in-out infinite alternate; }
+        .orb-5 { width: 280px; height: 280px; background: #3040CC; top: 50%; left: 42%; animation: drift5 19s ease-in-out infinite alternate; }
+
+        @keyframes drift1 { from{transform:translate(0,0)} to{transform:translate(60px,80px)} }
+        @keyframes drift2 { from{transform:translate(0,0)} to{transform:translate(-80px,60px)} }
+        @keyframes drift3 { from{transform:translate(0,0)} to{transform:translate(50px,-70px)} }
+        @keyframes drift4 { from{transform:translate(0,0)} to{transform:translate(-60px,-50px)} }
+        @keyframes drift5 { from{transform:translate(0,0)} to{transform:translate(40px,50px)} }
+
+        /* ═══ NAV PILL ═══ */
+        .nav-pill {
+            position: fixed;
+            top: 24px; left: 50%; transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: var(--glass);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b);
+            border-radius: 100px;
+            padding: 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .nav-back {
+            display: flex; align-items: center; gap: 7px;
+            padding: 10px 20px;
+            font-size: 10px; font-weight: 600; letter-spacing: 0.16em;
+            text-transform: uppercase; color: var(--ink-2);
+            text-decoration: none; transition: color 0.2s, background 0.2s;
+        }
+        .nav-back:hover { color: var(--accent); background: rgba(0,207,255,0.06); }
+        .nav-back svg { width: 11px; height: 11px; }
+        .nav-sep { width: 1px; height: 28px; background: var(--rule); }
+        .nav-brand {
+            padding: 10px 20px;
+            font-family: var(--font-d);
+            font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+            text-transform: uppercase; color: var(--ink); text-decoration: none;
+        }
+        .nav-brand span { color: var(--accent); }
+        .nav-sep2 { width: 1px; height: 28px; background: var(--rule); }
+        .nav-title {
+            padding: 10px 20px;
+            font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+            color: var(--ink-3); text-transform: uppercase;
+        }
+
+        /* ═══ HERO ═══ */
+        .case-hero {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .hero-photo {
+            position: absolute; inset: 0;
+            background: url('images/earth4/main_city_render.jpg') center center / cover no-repeat;
+        }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(6,10,18,0.5) 0%,
+                rgba(6,10,18,0.1) 25%,
+                rgba(6,10,18,0.55) 60%,
+                rgba(6,10,18,0.97) 100%
+            );
+        }
+        /* scan-line texture */
+        .hero-scan {
+            position: absolute; inset: 0;
+            background-image: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,0.07) 2px,
+                rgba(0,0,0,0.07) 4px
+            );
+            pointer-events: none;
+        }
+        /* HUD corner brackets */
+        .hud-corner {
+            position: absolute;
+            width: 32px; height: 32px;
+            pointer-events: none;
+        }
+        .hud-tl { top: 80px; left: 40px; border-top: 1.5px solid var(--accent); border-left: 1.5px solid var(--accent); opacity: 0.5; }
+        .hud-tr { top: 80px; right: 40px; border-top: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); opacity: 0.5; }
+        .hud-bl { bottom: 40px; left: 40px; border-bottom: 1.5px solid var(--accent); border-left: 1.5px solid var(--accent); opacity: 0.5; }
+        .hud-br { bottom: 40px; right: 40px; border-bottom: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); opacity: 0.5; }
+
+        .hero-content {
+            position: relative; z-index: 2;
+            padding: 0 72px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 40px;
+        }
+        .hero-left { flex: 1; }
+        .hero-logo {
+            height: 34px; margin-bottom: 28px;
+            opacity: 0; animation: fadeUp 0.9s 0.2s forwards;
+            filter: brightness(0) invert(1);
+        }
+        .hero-eyebrow {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 10px; font-weight: 600; letter-spacing: 0.3em;
+            text-transform: uppercase; color: var(--accent);
+            margin-bottom: 16px;
+            opacity: 0; animation: fadeUp 0.9s 0.35s forwards;
+        }
+        .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+        .hero-title {
+            font-family: var(--font-d);
+            font-weight: 800;
+            font-size: clamp(52px, 8.5vw, 116px);
+            line-height: 0.88;
+            letter-spacing: -0.04em;
+            color: var(--ink);
+            margin-bottom: 24px;
+            opacity: 0; animation: fadeUp 0.9s 0.5s forwards;
+        }
+        .hero-title .accent-word { color: var(--accent); }
+        .hero-tagline {
+            font-size: clamp(14px, 1.4vw, 18px);
+            color: var(--ink-2);
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            opacity: 0; animation: fadeUp 0.9s 0.65s forwards;
+        }
+        .hero-right {
+            display: flex; flex-direction: column; align-items: flex-end;
+            gap: 20px;
+            opacity: 0; animation: fadeUp 0.9s 0.8s forwards;
+        }
+        .hero-meta-row { display: flex; flex-direction: column; align-items: flex-end; }
+        .hero-meta-label {
+            font-size: 8px; font-weight: 600; letter-spacing: 0.26em;
+            text-transform: uppercase; color: var(--ink-3); margin-bottom: 3px;
+        }
+        .hero-meta-value {
+            font-family: var(--font-d); font-size: 13px; font-weight: 600;
+            color: rgba(232,240,255,0.88);
+        }
+
+        /* ═══ PAGE WRAPPER ═══ */
+        .page { max-width: 1320px; margin: 0 auto; padding: 0 72px; position: relative; z-index: 1; }
+
+        /* ═══ SECTION ═══ */
+        .section { padding: 96px 0 56px; }
+        .section-hud {
+            display: flex; align-items: center; gap: 0;
+            margin-bottom: 28px;
+        }
+        .section-num {
+            font-family: var(--font-d); font-size: 11px; font-weight: 700;
+            letter-spacing: 0.18em; color: var(--accent);
+            padding-right: 16px;
+        }
+        .section-line { flex: 1; height: 1px; background: var(--rule); position: relative; }
+        .section-line::after {
+            content: '';
+            position: absolute; left: 0; top: 0;
+            width: 40px; height: 1px;
+            background: var(--accent); opacity: 0.4;
+        }
+        .section-tag {
+            font-size: 9px; font-weight: 600; letter-spacing: 0.24em;
+            text-transform: uppercase; color: var(--ink-3);
+            padding: 0 20px;
+        }
+        .section-title {
+            font-family: var(--font-d);
+            font-size: clamp(34px, 4.5vw, 68px);
+            font-weight: 800; letter-spacing: -0.03em; line-height: 0.95;
+            color: var(--ink); margin-bottom: 12px;
+        }
+        .section-title em { font-style: normal; color: var(--accent); }
+        .section-sub {
+            font-size: 14px; color: var(--ink-3);
+            letter-spacing: 0.08em; text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        /* ═══ GLASS CARD ═══ */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .glass-card-inner {
+            background: var(--glass-2);
+            border: 1px solid var(--rule);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* ═══ RULE ═══ */
+        .rule {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--rule) 20%, var(--rule) 80%, transparent);
+            margin: 80px 0;
+        }
+
+        /* ═══ SPLIT LAYOUT ═══ */
+        .split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+        .split.wide-l { grid-template-columns: 1.5fr 1fr; }
+        .split.wide-r { grid-template-columns: 1fr 1.5fr; }
+
+        .text-col { display: flex; flex-direction: column; gap: 20px; }
+        .eyebrow-tag {
+            font-size: 9px; font-weight: 600; letter-spacing: 0.28em;
+            text-transform: uppercase; color: var(--accent);
+        }
+        .text-col h3 {
+            font-family: var(--font-d); font-size: clamp(22px, 2.4vw, 34px);
+            font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;
+            color: var(--ink);
+        }
+        .text-col h3 em { font-style: normal; color: var(--accent); }
+        .text-col p { font-size: 14px; color: var(--ink-2); line-height: 1.9; }
+
+        /* ═══ FROST QUOTE ═══ */
+        .frost-quote {
+            background: var(--glass);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b);
+            border-left: 2px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 20px 28px;
+        }
+        .frost-quote blockquote {
+            font-family: var(--font-d); font-size: clamp(15px, 1.6vw, 20px);
+            font-weight: 600; line-height: 1.55; color: var(--ink);
+            letter-spacing: -0.01em;
+        }
+        .frost-quote cite {
+            display: block; margin-top: 10px;
+            font-size: 9px; font-weight: 600; letter-spacing: 0.22em;
+            text-transform: uppercase; color: var(--accent); font-style: normal;
+        }
+
+        /* ═══ IMAGE FRAME ═══ */
+        .img-frame {
+            background: var(--glass-2);
+            border: 1px solid var(--glass-b);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .img-frame img { width: 100%; display: block; transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94); }
+        .img-frame:hover img { transform: scale(1.025); }
+        .img-caption { font-size: 11px; color: var(--ink-3); margin-top: 10px; letter-spacing: 0.06em; }
+
+        /* ═══ COMPARISON ═══ */
+        .comparison-wrap {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .comp-panel {
+            background: var(--glass);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+        .comp-panel.after {
+            border-color: rgba(0,207,255,0.28);
+            box-shadow: 0 0 32px rgba(0,207,255,0.07), inset 0 0 0 1px rgba(0,207,255,0.1);
+        }
+        .comp-panel img { width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover; }
+        .comp-body {
+            padding: 20px 24px;
+            border-top: 1px solid var(--rule);
+        }
+        .comp-label {
+            font-size: 9px; font-weight: 600; letter-spacing: 0.22em;
+            text-transform: uppercase; color: var(--ink-3); margin-bottom: 5px;
+        }
+        .comp-label.a { color: var(--accent); }
+        .comp-title {
+            font-family: var(--font-d); font-size: 17px; font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .comp-tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            margin-top: 8px;
+            font-size: 10px; font-weight: 500; letter-spacing: 0.12em;
+            text-transform: uppercase; color: var(--accent);
+            background: rgba(0,207,255,0.08);
+            border: 1px solid rgba(0,207,255,0.2);
+            border-radius: 100px; padding: 3px 10px;
+        }
+
+        /* process note */
+        .frost-note {
+            background: var(--glass);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b);
+            border-radius: 12px;
+            padding: 20px 28px;
+            margin-top: 12px;
+            font-size: 13px; color: var(--ink-2); line-height: 1.8;
+        }
+        .frost-note strong { color: var(--ink); font-weight: 500; }
+
+        /* ═══ SCREEN SWITCHER ═══ */
+        .screen-switcher {
+            background: var(--glass);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        /* tab bar */
+        .sw-tabs {
+            display: flex; align-items: stretch;
+            border-bottom: 1px solid var(--rule);
+            padding: 0 4px;
+        }
+        .sw-tab {
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 14px 12px;
+            font-family: var(--font-d); font-size: 11px; font-weight: 600;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--ink-3); cursor: pointer;
+            border: none; background: none;
+            border-bottom: 2px solid transparent; margin-bottom: -1px;
+            transition: color 0.2s, border-color 0.2s;
+            user-select: none;
+        }
+        .sw-tab .tab-num {
+            font-size: 9px; font-weight: 600; letter-spacing: 0.2em;
+            color: var(--ink-3); opacity: 0.5;
+            transition: color 0.2s, opacity 0.2s;
+        }
+        .sw-tab:hover { color: var(--ink-2); }
+        .sw-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+        .sw-tab.active .tab-num { color: var(--accent); opacity: 1; }
+
+        /* display area */
+        .sw-display { position: relative; overflow: hidden; }
+        .sw-screen {
+            position: absolute; inset: 0;
+            opacity: 0;
+            transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1);
+            pointer-events: none;
+        }
+        .sw-screen.active { opacity: 1; pointer-events: auto; position: relative; }
+        .sw-screen img { width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover; }
+
+        /* info strip */
+        .sw-info {
+            display: flex; align-items: flex-start; gap: 48px;
+            padding: 28px 36px;
+            border-top: 1px solid var(--rule);
+        }
+        .sw-info-panel { display: none; width: 100%; }
+        .sw-info-panel.active { display: flex; gap: 48px; align-items: flex-start; }
+        .sw-info-left { flex: 1; }
+        .sw-label {
+            font-size: 9px; font-weight: 600; letter-spacing: 0.26em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 6px;
+        }
+        .sw-title {
+            font-family: var(--font-d); font-size: clamp(18px, 1.8vw, 24px);
+            font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;
+            color: var(--ink); margin-bottom: 10px;
+        }
+        .sw-desc { font-size: 13px; color: var(--ink-2); line-height: 1.85; }
+        .sw-info-right { display: flex; flex-direction: column; gap: 8px; min-width: 220px; }
+        .sw-pill {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 11px; color: var(--ink-2);
+        }
+        .sw-pill::before {
+            content: '';
+            width: 5px; height: 5px; border-radius: 50%;
+            background: var(--accent); flex-shrink: 0;
+            box-shadow: 0 0 6px rgba(0,207,255,0.5);
+        }
+
+
+        @media(max-width:768px){
+            .sw-info-panel.active { flex-direction: column; gap: 16px; }
+            .sw-tab { padding: 12px 8px; font-size: 10px; }
+        }
+
+        /* ═══ TEAM ═══ */
+        .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .team-card {
+            background: var(--glass);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .team-card:hover { border-color: rgba(0,207,255,0.24); transform: translateY(-4px); }
+        .team-card::after {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, var(--accent), rgba(0,207,255,0));
+        }
+        .team-card img {
+            width: 100%; aspect-ratio: 1; object-fit: cover; display: block;
+            filter: grayscale(15%) brightness(0.92);
+        }
+        .team-body { padding: 20px 22px; }
+        .team-name {
+            font-family: var(--font-d); font-size: 16px; font-weight: 700;
+            letter-spacing: -0.02em; margin-bottom: 5px;
+        }
+        .team-role {
+            font-size: 11px; color: var(--accent); font-weight: 500;
+            letter-spacing: 0.06em;
+        }
+
+        /* ═══ FOOTER ═══ */
+        footer {
+            position: relative; z-index: 1;
+            border-top: 1px solid var(--rule);
+            padding: 32px 72px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(6,10,18,0.6);
+            backdrop-filter: blur(20px);
+        }
+        footer p { font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em; }
+        .footer-back {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 10px; font-weight: 600; letter-spacing: 0.16em;
+            text-transform: uppercase; color: var(--ink-2);
+            text-decoration: none; transition: color 0.2s;
+        }
+        .footer-back:hover { color: var(--accent); }
+        .footer-back svg { width: 13px; height: 13px; }
+
+        /* ═══ ANIMATIONS ═══ */
+        @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+        .reveal { opacity:0; transform:translateY(32px); transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1); }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .d1{transition-delay:0.08s} .d2{transition-delay:0.16s} .d3{transition-delay:0.24s}
+
+        /* ═══ RESPONSIVE ═══ */
+        @media(max-width:1024px){
+            .page{padding:0 40px} .hero-content{padding:0 40px 60px}
+            .split,.split.wide-l,.split.wide-r{grid-template-columns:1fr;gap:32px}
+            .screen-feature,.screen-feature.flip{grid-template-columns:1fr}
+            .screen-feature .sf-body,.screen-feature.flip .sf-body{border:none;border-top:1px solid var(--rule)}
+            footer{padding:24px 40px}
+        }
+        @media(max-width:768px){
+            .nav-title,.nav-sep2{display:none}
+            .page{padding:0 20px} .hero-content{padding:0 20px 48px} .hero-right{display:none}
+            .comparison-wrap{grid-template-columns:1fr}
+            .team-grid{grid-template-columns:1fr 1fr}
+            footer{flex-direction:column;gap:12px;padding:20px;text-align:center}
+            .hud-tl,.hud-tr,.hud-bl,.hud-br{display:none}
+        }
+    </style>
+</head>
+<body>
+
+<!-- ANIMATED BACKGROUND ORBS -->
+<div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="orb orb-5"></div>
+</div>
+
+<!-- FLOATING NAV PILL -->
+<nav class="nav-pill">
+    <a href="index.html" class="nav-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+        Portfolio
+    </a>
+    <div class="nav-sep"></div>
+    <a href="index.html" class="nav-brand">K<span>A</span></a>
+    <div class="nav-sep2"></div>
+    <span class="nav-title">4earth HMI</span>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<div class="case-hero">
+    <div class="hero-photo" id="heroPhoto"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-scan"></div>
+    <div class="hud-corner hud-tl"></div>
+    <div class="hud-corner hud-tr"></div>
+    <div class="hud-corner hud-bl"></div>
+    <div class="hud-corner hud-br"></div>
+    <div class="hero-content">
+        <div class="hero-left">
+            <img class="hero-logo" src="images/earth4/logo.jpg" alt="4earth">
+            <p class="hero-eyebrow">Internship &nbsp;·&nbsp; 2025</p>
+            <h1 class="hero-title">Gamifying<br>the <span class="accent-word">Machine</span></h1>
+            <p class="hero-tagline">Human Machine Interface for automated water treatment systems</p>
+        </div>
+        <div class="hero-right">
+            <div class="hero-meta-row">
+                <span class="hero-meta-label">Role</span>
+                <span class="hero-meta-value">Industrial Designer</span>
+            </div>
+            <div class="hero-meta-row">
+                <span class="hero-meta-label">Type</span>
+                <span class="hero-meta-value">HMI / UX Design</span>
+            </div>
+            <div class="hero-meta-row">
+                <span class="hero-meta-label">Company</span>
+                <span class="hero-meta-value">4earth</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ CONTENT ═══ -->
+<main class="page">
+
+    <!-- ── 01 · THE BRIEF ── -->
+    <div class="section reveal">
+        <div class="section-hud">
+            <span class="section-num">01</span>
+            <div class="section-line"></div>
+            <span class="section-tag">The Brief</span>
+            <div class="section-line"></div>
+        </div>
+        <h2 class="section-title">Gamifying Human<br>Machine Interface <em>(HMI)</em></h2>
+        <p class="section-sub">Modular · Automated · Built for the field</p>
+    </div>
+
+    <div class="split wide-l reveal">
+        <div>
+            <div class="img-frame">
+                <img src="images/earth4/main_city_render.jpg" alt="4earth system render">
+            </div>
+            <p class="img-caption">4earth modular container water treatment system</p>
+        </div>
+        <div class="text-col">
+            <div class="eyebrow-tag">The Objective</div>
+            <h3>To create a <em>legible</em> and unique interface to control powerful systems</h3>
+            <p>4earth builds fully automated, modular container water treatment systems. The challenge: how do you make a complex industrial machine feel intuitive — even satisfying — to operate?</p>
+            <p>The answer was to gamify the HMI — borrow the visual clarity and feedback loops of modern software and apply them to industrial control systems.</p>
+        </div>
+    </div>
+
+    <div class="rule"></div>
+
+    <!-- ── 02 · THE PROBLEM ── -->
+    <div class="section reveal" style="padding-top:0;">
+        <div class="section-hud">
+            <span class="section-num">02</span>
+            <div class="section-line"></div>
+            <span class="section-tag">The Problem</span>
+            <div class="section-line"></div>
+        </div>
+        <h2 class="section-title">Industry <em>standard</em><br>wasn't good enough</h2>
+        <p class="section-sub">Before vs. After — A study in clarity</p>
+    </div>
+
+    <div class="comparison-wrap reveal">
+        <div class="comp-panel">
+            <img src="images/earth4/industry_standard.jpg" alt="Industry standard HMI">
+            <div class="comp-body">
+                <div class="comp-label">Before</div>
+                <div class="comp-title">Industry Standard</div>
+            </div>
+        </div>
+        <div class="comp-panel after">
+            <img src="images/earth4/internship.jpg" alt="Redesigned HMI">
+            <div class="comp-body">
+                <div class="comp-label a">After</div>
+                <div class="comp-title">Redesigned Interface</div>
+                <div class="comp-tag">Internship Work</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="frost-note reveal">
+        The industry standard HMI prioritizes raw data density over usability. The redesign introduces <strong>clear visual hierarchy, contextual information grouping, and a system status language</strong> that operators can read at a glance — without sacrificing depth.
+    </div>
+
+    <div class="rule"></div>
+
+    <!-- ── 03 · THE INTERFACE ── -->
+    <div class="section reveal" style="padding-top:0;">
+        <div class="section-hud">
+            <span class="section-num">03</span>
+            <div class="section-line"></div>
+            <span class="section-tag">The Interface</span>
+            <div class="section-line"></div>
+        </div>
+        <h2 class="section-title">Four <em>screens</em>,<br>one system</h2>
+        <p class="section-sub">Menu · Home · AMV · Manual Mode</p>
+    </div>
+
+    <!-- INTERACTIVE SCREEN SWITCHER -->
+    <div class="screen-switcher reveal">
+
+        <!-- TAB BAR -->
+        <div class="sw-tabs">
+            <button class="sw-tab active" data-screen="menu">
+                <span class="tab-num">00</span> Menu
+            </button>
+            <button class="sw-tab" data-screen="home">
+                <span class="tab-num">01</span> Home
+            </button>
+            <button class="sw-tab" data-screen="amv">
+                <span class="tab-num">02</span> AMV
+            </button>
+            <button class="sw-tab" data-screen="manual">
+                <span class="tab-num">03</span> Manual Mode
+            </button>
+        </div>
+
+        <!-- SCREEN DISPLAY -->
+        <div class="sw-display">
+            <div class="sw-screen active" id="sc-menu">
+                <img src="images/earth4/screen_menu.jpg" alt="Menu screen">
+            </div>
+            <div class="sw-screen" id="sc-home">
+                <img src="images/earth4/screen_home.jpg" alt="Home screen">
+            </div>
+            <div class="sw-screen" id="sc-amv">
+                <img src="images/earth4/screen_amv.jpg" alt="AMV screen">
+            </div>
+            <div class="sw-screen" id="sc-manual">
+                <img src="images/earth4/screen_manual.jpg" alt="Manual mode screen">
+            </div>
+        </div>
+
+        <!-- INFO STRIP -->
+        <div class="sw-info">
+            <div class="sw-info-panel active" id="info-menu">
+                <div class="sw-info-left">
+                    <div class="sw-label">Screen / Menu</div>
+                    <div class="sw-title">Navigation at the surface</div>
+                    <p class="sw-desc">The main menu gives operators a clear entry point into every mode — Home, AutoMode View, Auto Setpoints, Manual Mode, Alarms, and Commissioning — all accessible in a single gesture.</p>
+                </div>
+                <div class="sw-info-right">
+                    <div class="sw-pill">Full navigation overview</div>
+                    <div class="sw-pill">Immediate mode access</div>
+                    <div class="sw-pill">Status indicators</div>
+                </div>
+            </div>
+            <div class="sw-info-panel" id="info-home">
+                <div class="sw-info-left">
+                    <div class="sw-label">Screen / Home</div>
+                    <div class="sw-title">System status at a glance</div>
+                    <p class="sw-desc">The Home screen gives operators an immediate read on overall system health — key indicators surfaced without navigation, always visible.</p>
+                </div>
+                <div class="sw-info-right">
+                    <div class="sw-pill">Real-time system health</div>
+                    <div class="sw-pill">Critical alerts surfaced</div>
+                    <div class="sw-pill">No navigation required</div>
+                </div>
+            </div>
+            <div class="sw-info-panel" id="info-amv">
+                <div class="sw-info-left">
+                    <div class="sw-label">Screen / AMV — Auto Mode View</div>
+                    <div class="sw-title">Automode, fully in context</div>
+                    <p class="sw-desc">When the system runs autonomously, the AMV screen surfaces the KPIs that matter — process status, flow rates, and alerts — without requiring manual input.</p>
+                </div>
+                <div class="sw-info-right">
+                    <div class="sw-pill">System KPIs in Automode</div>
+                    <div class="sw-pill">Easy navigation</div>
+                    <div class="sw-pill">In context processes</div>
+                </div>
+            </div>
+            <div class="sw-info-panel" id="info-manual">
+                <div class="sw-info-left">
+                    <div class="sw-label">Screen / Manual Mode</div>
+                    <div class="sw-title">Powerful control, beautiful execution</div>
+                    <p class="sw-desc">Manual mode surfaces individual system components for direct operator control — without sacrificing the visual clarity established across the rest of the interface.</p>
+                </div>
+                <div class="sw-info-right">
+                    <div class="sw-pill">Beautiful and intuitive UI</div>
+                    <div class="sw-pill">In context view</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="rule"></div>
+
+    <!-- ── 04 · TEAM ── -->
+    <div class="section reveal" style="padding-top:0;">
+        <div class="section-hud">
+            <span class="section-num">04</span>
+            <div class="section-line"></div>
+            <span class="section-tag">Acknowledgments</span>
+            <div class="section-line"></div>
+        </div>
+        <h2 class="section-title">The <em>Team</em></h2>
+        <p class="section-sub">Built with engineers, guided by design leadership</p>
+    </div>
+
+    <div class="team-grid reveal">
+        <div class="team-card">
+            <img src="images/earth4/team_sreerag.jpg" alt="Sreerag Suresh">
+            <div class="team-body">
+                <div class="team-name">Sreerag Suresh</div>
+                <div class="team-role">Head of Engineering &nbsp;·&nbsp; PM</div>
+            </div>
+        </div>
+        <div class="team-card">
+            <img src="images/earth4/team_gulzeb.jpg" alt="Gulzeb Muhammadzai">
+            <div class="team-body">
+                <div class="team-name">Gulzeb Muhammadzai</div>
+                <div class="team-role">CCO &nbsp;·&nbsp; Head of Design</div>
+            </div>
+        </div>
+        <div class="team-card">
+            <img src="images/earth4/team_wassim.jpg" alt="Wassim Naser">
+            <div class="team-body">
+                <div class="team-name">Wassim Naser</div>
+                <div class="team-role">Lead Product Engineer</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="padding-bottom: 104px;"></div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <p>4earth HMI Design &nbsp;·&nbsp; Khaled Abdul Rahman &nbsp;·&nbsp; 2025</p>
+    <a href="index.html" class="footer-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+        Back to Portfolio
+    </a>
+</footer>
+
+<script>
+    // Hero parallax
+    const heroPhoto = document.getElementById('heroPhoto');
+    window.addEventListener('scroll', () => {
+        heroPhoto.style.transform = `scale(1.04) translateY(${window.scrollY * 0.28}px)`;
+    }, { passive: true });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+        });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Screen switcher
+    const tabs = document.querySelectorAll('.sw-tab');
+
+    function switchScreen(key) {
+        tabs.forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.sw-screen').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.sw-info-panel').forEach(p => p.classList.remove('active'));
+        const matchTab = document.querySelector(`.sw-tab[data-screen="${key}"]`);
+        if (matchTab) matchTab.classList.add('active');
+        document.getElementById('sc-' + key).classList.add('active');
+        document.getElementById('info-' + key).classList.add('active');
+    }
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => switchScreen(tab.dataset.screen));
+    });
+
+    // HMI menu buttons
+    document.querySelectorAll('.hmi-btn[data-target]').forEach(btn => {
+        btn.addEventListener('click', () => switchScreen(btn.dataset.target));
+    });
+</script>
+
+</body>
+</html>

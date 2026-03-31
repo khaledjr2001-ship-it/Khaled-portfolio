@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brillum — KA Design Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:      #09080E;
+            --glass:   rgba(255,255,255,0.048);
+            --glass-2: rgba(255,255,255,0.028);
+            --glass-b: rgba(255,255,255,0.085);
+            --blur:    blur(28px) saturate(160%);
+            --ink:     #F5F0E8;
+            --ink-2:   rgba(245,240,232,0.52);
+            --ink-3:   rgba(245,240,232,0.26);
+            --accent:  #FFB347;
+            --rule:    rgba(255,255,255,0.07);
+            --font-d:  'Syne', sans-serif;
+            --font-b:  'Inter', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--ink); font-family: var(--font-b); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+        ::selection { background: var(--accent); color: #000; }
+
+        /* ═══ ORBS ═══ */
+        .bg-orbs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(110px); opacity: 0.3; }
+        .orb-1 { width: 650px; height: 650px; background: #8B4000; top: -15%; left: -10%; animation: drift1 20s ease-in-out infinite alternate; }
+        .orb-2 { width: 480px; height: 480px; background: #CC6800; top: 20%; right: -8%; animation: drift2 15s ease-in-out infinite alternate; }
+        .orb-3 { width: 380px; height: 380px; background: #6B2800; bottom: 20%; left: 15%; animation: drift3 24s ease-in-out infinite alternate; }
+        .orb-4 { width: 300px; height: 300px; background: #AA5000; bottom: -8%; right: 20%; animation: drift4 18s ease-in-out infinite alternate; }
+        .orb-5 { width: 260px; height: 260px; background: #993300; top: 55%; left: 42%; animation: drift5 21s ease-in-out infinite alternate; }
+
+        @keyframes drift1 { from{transform:translate(0,0)} to{transform:translate(60px,80px)} }
+        @keyframes drift2 { from{transform:translate(0,0)} to{transform:translate(-80px,60px)} }
+        @keyframes drift3 { from{transform:translate(0,0)} to{transform:translate(50px,-70px)} }
+        @keyframes drift4 { from{transform:translate(0,0)} to{transform:translate(-60px,-50px)} }
+        @keyframes drift5 { from{transform:translate(0,0)} to{transform:translate(40px,50px)} }
+
+        /* ═══ NAV ═══ */
+        .nav-pill {
+            position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+            z-index: 100; display: flex; align-items: center;
+            background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-b); border-radius: 100px; overflow: hidden; white-space: nowrap;
+        }
+        .nav-back { display: flex; align-items: center; gap: 7px; padding: 10px 20px; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; transition: color 0.2s, background 0.2s; }
+        .nav-back:hover { color: var(--accent); background: rgba(255,179,71,0.07); }
+        .nav-back svg { width: 11px; height: 11px; }
+        .nav-sep { width: 1px; height: 28px; background: var(--rule); }
+        .nav-brand { padding: 10px 20px; font-family: var(--font-d); font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+        .nav-brand span { color: var(--accent); }
+        .nav-title { padding: 10px 20px; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; color: var(--ink-3); text-transform: uppercase; }
+
+        /* ═══ HERO ═══ */
+        .case-hero { height: 100vh; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; }
+        .hero-photo { position: absolute; inset: 0; background: url('images/brillum/hero.jpg') center center / cover no-repeat; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(9,8,14,0.4) 0%, rgba(9,8,14,0.05) 25%, rgba(9,8,14,0.6) 65%, rgba(9,8,14,0.97) 100%); }
+        .hero-scan { position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px); pointer-events: none; }
+        .hud-corner { position: absolute; width: 28px; height: 28px; pointer-events: none; }
+        .hud-tl { top: 80px; left: 40px; border-top: 1.5px solid var(--accent); border-left: 1.5px solid var(--accent); opacity: 0.4; }
+        .hud-tr { top: 80px; right: 40px; border-top: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); opacity: 0.4; }
+        .hud-bl { bottom: 40px; left: 40px; border-bottom: 1.5px solid var(--accent); border-left: 1.5px solid var(--accent); opacity: 0.4; }
+        .hud-br { bottom: 40px; right: 40px; border-bottom: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); opacity: 0.4; }
+
+        .hero-content { position: relative; z-index: 2; padding: 0 72px 80px; display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
+        .hero-left { flex: 1; }
+        .hero-eyebrow { display: flex; align-items: center; gap: 12px; font-size: 10px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; opacity: 0; animation: fadeUp 0.9s 0.35s forwards; }
+        .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+        .hero-title { font-family: var(--font-d); font-weight: 800; font-size: clamp(64px, 10vw, 130px); line-height: 0.88; letter-spacing: -0.04em; color: var(--ink); margin-bottom: 24px; opacity: 0; animation: fadeUp 0.9s 0.5s forwards; }
+        .hero-title .accent-word { color: var(--accent); }
+        .hero-tagline { font-size: clamp(14px, 1.4vw, 18px); color: var(--ink-2); font-weight: 400; letter-spacing: 0.02em; opacity: 0; animation: fadeUp 0.9s 0.65s forwards; }
+        .hero-right { display: flex; flex-direction: column; align-items: flex-end; gap: 20px; opacity: 0; animation: fadeUp 0.9s 0.8s forwards; }
+        .hero-meta-row { display: flex; flex-direction: column; align-items: flex-end; }
+        .hero-meta-label { font-size: 8px; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 3px; }
+        .hero-meta-value { font-family: var(--font-d); font-size: 13px; font-weight: 600; color: rgba(245,240,232,0.88); }
+
+        /* ═══ PAGE ═══ */
+        .page { max-width: 1320px; margin: 0 auto; padding: 0 72px; position: relative; z-index: 1; }
+
+        /* ═══ SECTION ═══ */
+        .section { padding: 96px 0 56px; }
+        .section-hud { display: flex; align-items: center; margin-bottom: 28px; }
+        .section-num { font-family: var(--font-d); font-size: 11px; font-weight: 700; letter-spacing: 0.18em; color: var(--accent); padding-right: 16px; }
+        .section-line { flex: 1; height: 1px; background: var(--rule); position: relative; }
+        .section-line::after { content: ''; position: absolute; left: 0; top: 0; width: 40px; height: 1px; background: var(--accent); opacity: 0.4; }
+        .section-tag { font-size: 9px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-3); padding: 0 20px; }
+        .section-title { font-family: var(--font-d); font-size: clamp(34px, 4.5vw, 64px); font-weight: 800; letter-spacing: -0.03em; line-height: 0.95; color: var(--ink); margin-bottom: 12px; }
+        .section-title em { font-style: normal; color: var(--accent); }
+        .section-sub { font-size: 14px; color: var(--ink-3); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+
+        /* ═══ RULE ═══ */
+        .rule { height: 1px; background: linear-gradient(90deg, transparent, var(--rule) 20%, var(--rule) 80%, transparent); margin: 80px 0; }
+
+        /* ═══ LAYOUTS ═══ */
+        .split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+        .split.wide-l { grid-template-columns: 1.5fr 1fr; }
+        .text-col { display: flex; flex-direction: column; gap: 20px; }
+        .eyebrow-tag { font-size: 9px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent); }
+        .text-col h3 { font-family: var(--font-d); font-size: clamp(22px, 2.4vw, 34px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+        .text-col h3 em { font-style: normal; color: var(--accent); }
+        .text-col p { font-size: 14px; color: var(--ink-2); line-height: 1.9; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+
+        /* ═══ IMAGE FRAME ═══ */
+        .img-frame { background: var(--glass-2); border: 1px solid var(--glass-b); border-radius: 12px; overflow: hidden; }
+        .img-frame img { width: 100%; display: block; transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94); }
+        .img-frame:hover img { transform: scale(1.025); }
+        .img-caption { font-size: 11px; color: var(--ink-3); margin-top: 10px; letter-spacing: 0.06em; }
+
+        /* ═══ GLASS CARD ═══ */
+        .glass-card { background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--glass-b); border-radius: 16px; overflow: hidden; }
+
+        /* ═══ META TABLE ═══ */
+        .meta-table { display: flex; flex-direction: column; gap: 0; }
+        .meta-row { display: flex; gap: 0; border-bottom: 1px solid var(--rule); padding: 14px 0; }
+        .meta-row:last-child { border-bottom: none; }
+        .meta-key { font-size: 9px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-3); width: 160px; flex-shrink: 0; padding-top: 2px; }
+        .meta-val { font-family: var(--font-d); font-size: 14px; font-weight: 600; color: var(--ink); }
+
+        /* ═══ CHALLENGE PILLS ═══ */
+        .challenge-list { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+        .challenge-item { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--ink-2); }
+        .challenge-item::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; box-shadow: 0 0 8px rgba(255,179,71,0.5); }
+
+        /* ═══ JOURNEY MAP ═══ */
+        .journey-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--glass-b); border-radius: 16px; overflow: hidden; background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); }
+        .journey-col { display: flex; flex-direction: column; border-right: 1px solid var(--rule); }
+        .journey-col:last-child { border-right: none; }
+
+        .journey-situation-box { padding: 24px 20px; border-bottom: 1px solid var(--rule); flex: 1; }
+        .j-label { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); margin-bottom: 6px; }
+        .j-label span { font-weight: 400; color: var(--ink-2); }
+        .j-text { font-size: 12px; color: var(--ink-2); line-height: 1.7; }
+
+        .journey-icon-box { display: flex; align-items: center; justify-content: center; padding: 32px 20px; border-bottom: 1px solid var(--rule); }
+        .play-wrap {
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .play-tri {
+            width: 0; height: 0;
+            border-top: solid transparent;
+            border-bottom: solid transparent;
+            border-left: solid;
+        }
+        .play-tri.s1 { border-top-width: 38px; border-bottom-width: 38px; border-left-width: 66px;  border-left-color: rgba(210,210,210,0.15); }
+        .play-tri.s2 { border-top-width: 46px; border-bottom-width: 46px; border-left-width: 80px;  border-left-color: rgba(210,210,210,0.22); }
+        .play-tri.s3 { border-top-width: 54px; border-bottom-width: 54px; border-left-width: 94px;  border-left-color: rgba(210,210,210,0.30); }
+        .play-tri.s4 { border-top-width: 62px; border-bottom-width: 62px; border-left-width: 108px; border-left-color: rgba(210,210,210,0.38); }
+        .play-emoji {
+            position: absolute;
+            top: 50%; transform: translateY(-50%);
+            font-size: 28px; line-height: 1;
+        }
+        .play-wrap.s1 .play-emoji { left: calc(50% - 49px); font-size: 26px; }
+        .play-wrap.s2 .play-emoji { left: calc(50% - 58px); font-size: 30px; }
+        .play-wrap.s3 .play-emoji { left: calc(50% - 67px); font-size: 36px; }
+        .play-wrap.s4 .play-emoji { left: calc(50% - 75px); font-size: 42px; }
+
+        .journey-action-box { padding: 24px 20px; }
+        .j-label-action { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; color: var(--accent); margin-bottom: 6px; }
+        .j-label-action span { font-weight: 400; color: var(--ink-2); }
+
+        /* ═══ ITERATION CRITERIA ═══ */
+        .criteria-list { display: flex; flex-direction: column; gap: 12px; }
+        .criteria-item { display: flex; align-items: flex-start; gap: 16px; }
+        .criteria-num { font-family: var(--font-d); font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; flex-shrink: 0; margin-top: 2px; }
+        .criteria-text { font-size: 13px; color: var(--ink-2); line-height: 1.7; }
+
+        /* ═══ FEATURE CALLOUTS ═══ */
+        .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 32px; }
+        .feature-card { background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--glass-b); border-radius: 14px; padding: 24px 26px; position: relative; }
+        .feature-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); border-radius: 14px 14px 0 0; }
+        .feature-icon { font-size: 22px; margin-bottom: 12px; }
+        .feature-title { font-family: var(--font-d); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+        .feature-desc { font-size: 13px; color: var(--ink-2); line-height: 1.7; }
+
+        /* ═══ FOOTER ═══ */
+        footer { position: relative; z-index: 1; border-top: 1px solid var(--rule); padding: 32px 72px; display: flex; justify-content: space-between; align-items: center; background: rgba(9,8,14,0.6); backdrop-filter: blur(20px); }
+        footer p { font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em; }
+        .footer-back { display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; transition: color 0.2s; }
+        .footer-back:hover { color: var(--accent); }
+        .footer-back svg { width: 13px; height: 13px; }
+
+        /* ═══ ANIMATIONS ═══ */
+        @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+        .reveal { opacity:0; transform:translateY(32px); transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1); }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .d1{transition-delay:0.08s} .d2{transition-delay:0.16s} .d3{transition-delay:0.24s} .d4{transition-delay:0.32s}
+
+        /* ═══ RESPONSIVE ═══ */
+        @media(max-width:1024px){ .page{padding:0 40px} .hero-content{padding:0 40px 60px} .split,.split.wide-l{grid-template-columns:1fr;gap:32px} .grid-4{grid-template-columns:1fr 1fr} .journey-grid{grid-template-columns:1fr 1fr} footer{padding:24px 40px} }
+        @media(max-width:768px){ .nav-title{display:none} .page{padding:0 20px} .hero-content{padding:0 20px 48px} .hero-right{display:none} .grid-2,.grid-3,.feature-grid{grid-template-columns:1fr} .emotion-row{grid-template-columns:1fr 1fr} .hud-tl,.hud-tr,.hud-bl,.hud-br{display:none} footer{flex-direction:column;gap:12px;padding:20px;text-align:center} }
+    </style>
+</head>
+<body>
+
+<div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="orb orb-5"></div>
+</div>
+
+<nav class="nav-pill">
+    <a href="index.html" class="nav-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+        Portfolio
+    </a>
+    <div class="nav-sep"></div>
+    <a href="index.html" class="nav-brand">K<span>A</span></a>
+    <div class="nav-sep"></div>
+    <span class="nav-title">Brillum</span>
+</nav>
+
+<!-- HERO -->
+<div class="case-hero">
+    <div class="hero-photo" id="heroPhoto"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-scan"></div>
+    <div class="hud-corner hud-tl"></div>
+    <div class="hud-corner hud-tr"></div>
+    <div class="hud-corner hud-bl"></div>
+    <div class="hud-corner hud-br"></div>
+    <div class="hero-content">
+        <div class="hero-left">
+            <p class="hero-eyebrow">Sophomore Studio &nbsp;·&nbsp; 2024 &nbsp;·&nbsp; 7 Weeks</p>
+            <h1 class="hero-title"><span class="accent-word">brillum</span></h1>
+            <p class="hero-tagline">the dream of every creative</p>
+        </div>
+        <div class="hero-right">
+            <div class="hero-meta-row">
+                <span class="hero-meta-label">Type</span>
+                <span class="hero-meta-value">Lighting Design</span>
+            </div>
+            <div class="hero-meta-row">
+                <span class="hero-meta-label">Year</span>
+                <span class="hero-meta-value">2024</span>
+            </div>
+            <div class="hero-meta-row">
+                <span class="hero-meta-label">Duration</span>
+                <span class="hero-meta-value">7 Weeks</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<main class="page">
+
+    <!-- 05 FINAL -->
+    <div class="section reveal" style="padding-top:0;">
+        <div class="section-hud">
+            <span class="section-num">05</span>
+            <div class="section-line"></div>
+            <span class="section-tag">Final Design</span>
+            <div class="section-line"></div>
+        </div>
+        <h2 class="section-title"><em>brillum</em></h2>
+        <p class="section-sub">The dream of every creative</p>
+    </div>
+
+    <div class="reveal" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;height:400px;">
+        <div class="img-frame" style="height:100%;"><img src="images/brillum/final_1.jpg" alt="Brillum final" style="width:100%;height:100%;object-fit:cover;"></div>
+        <div class="img-frame" style="height:100%;"><img src="images/brillum/final_2.jpg" alt="Brillum final" style="width:100%;height:100%;object-fit:cover;"></div>
+        <div class="img-frame" style="height:100%;"><img src="images/brillum/final_3.jpg" alt="Brillum final" style="width:100%;height:100%;object-fit:cover;"></div>
+        <div class="img-frame" style="height:100%;"><img src="images/brillum/final_4.jpg" alt="Brillum final" style="width:100%;height:100%;object-fit:cover;"></div>
+    </div>
+
+    <!-- FEATURE CALLOUTS -->
+    <div class="feature-grid reveal">
+        <div class="feature-card">
+            <div class="feature-icon">◎</div>
+            <div class="feature-title">Adjust Lighting Angle</div>
+            <p class="feature-desc">Fully articulating arm lets you direct light exactly where you need it — from task lighting to ambient wash.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">◈</div>
+            <div class="feature-title">Color Temp + Brightness</div>
+            <p class="feature-desc">Dial in the perfect color temperature and brightness for accurate photo review and studio work.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">⬡</div>
+            <div class="feature-title">Built-in USB Hub</div>
+            <p class="feature-desc">Eliminate dongle clutter — Brillum integrates your USB hub directly into the lamp, keeping your desk clean.</p>
+        </div>
+    </div>
+
+    <!-- 01 BRIEF -->
+    <div class="section reveal">
+        <div class="section-hud">
+            <span class="section-num">01</span>
+            <div class="section-line"></div>
+            <span class="section-tag">Brief</span>
+            <div class="section-line"></div>
+        </div>
+        <h2 class="section-title">Design a lighting fixture that<br>creates light for a <em>specific purpose</em></h2>
+        <p class="section-sub">Sophomore Studio · Industrial Design</p>
+    </div>
+
+    <div class="split wide-l reveal">
+        <div>
+            <div class="img-frame">
+                <img src="images/brillum/brief_1.jpg" alt="Brillum product">
+            </div>
+        </div>
+        <div class="text-col">
+            <div class="eyebrow-tag">The Project</div>
+            <h3>A desk light that <em>does more</em> than light your desk</h3>
+            <p>Photographers live at their desks — surrounded by dongles, cables, SD cards, and USB hubs. The brief called for a lighting fixture with purpose beyond illumination.</p>
+            <div class="meta-table">
+                <div class="meta-row"><span class="meta-key">Type</span><span class="meta-val">Sophomore Studio</span></div>
+                <div class="meta-row"><span class="meta-key">Year</span><span class="meta-val">2024</span></div>
+                <div class="meta-row"><span class="meta-key">Duration</span><span class="meta-val">7 Weeks</span></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="rule"></div>
+
+    <!-- 02 RESEARCH -->
+    <div class="section reveal" style="padding-top:0;">
+        <div class="section-hud">
+            <span class="section-num">02</span>
+            <div class="section-line"></div>
+            <span class="section-tag">Research</span>
+            <div class="section-line"></div>
+        </div>
+        <h2 class="section-title">The <em>photographer's</em> desk problem</h2>
+        <p class="section-sub">Target User · Challenges · Insights</p>
+    </div>
+
+    <div class="split reveal">
+        <div>
+            <div class="img-frame">
+                <img src="images/brillum/research1.png" alt="Photographer desk research">
+            </div>
+            <p class="img-caption">ai generated by chatGPT</p>
+        </div>
+        <div class="text-col">
+            <div class="eyebrow-tag">Target User</div>
+            <h3>The <em>working photographer</em></h3>
+            <p>Photographers require a lot of gear and equipment. When it's time to head to the studio, having a clean and functional desk setup is a must.</p>
+            <div class="challenge-list">
+                <div class="challenge-item">Limited desk space</div>
+                <div class="challenge-item">Lighting needs for accurate color review</div>
+                <div class="challenge-item">Cable and dongle clutter</div>
+                <div class="challenge-item">USB hub management</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JOURNEY MAP -->
+    <div class="journey-map reveal" style="margin-top: 40px;">
+
+        <div class="journey-col">
+            <div class="journey-situation-box">
+                <div class="j-label">situation: <span>the photographer purchases their first dongle to connect their camera or other devices to their computer.</span></div>
+            </div>
+            <div class="journey-icon-box">
+                <div class="play-wrap s1">
+                    <div class="play-tri s1"></div>
+                    <span class="play-emoji">😊</span>
+                </div>
+            </div>
+            <div class="journey-action-box">
+                <div class="j-label-action">action: <span>they neatly organize the dongle along with their other accessories on their desk or in a designated storage area.</span></div>
+            </div>
+        </div>
+
+        <div class="journey-col">
+            <div class="journey-situation-box">
+                <div class="j-label">situation: <span>over time, the photographer acquires additional dongles for different devices or purposes.</span></div>
+            </div>
+            <div class="journey-icon-box">
+                <div class="play-wrap s2">
+                    <div class="play-tri s2"></div>
+                    <span class="play-emoji">😐</span>
+                </div>
+            </div>
+            <div class="journey-action-box">
+                <div class="j-label-action">action: <span>they continue to add the new dongles to their workspace, initially finding space for them without much difficulty.</span></div>
+            </div>
+        </div>
+
+        <div class="journey-col">
+            <div class="journey-situation-box">
+                <div class="j-label">situation: <span>as the photographer acquires more dongles, their desk space becomes increasingly cluttered.</span></div>
+            </div>
+            <div class="journey-icon-box">
+                <div class="play-wrap s3">
+                    <div class="play-tri s3"></div>
+                    <span class="play-emoji">😢</span>
+                </div>
+            </div>
+            <div class="journey-action-box">
+                <div class="j-label-action">action: <span>they struggle to find enough space for all the dongles, leading to a disorganized and cluttered workspace.</span></div>
+            </div>
+        </div>
+
+        <div class="journey-col">
+            <div class="journey-situation-box">
+                <div class="j-label">situation: <span>the photographer's desk is now severely cluttered with dongles, cables, and other accessories.</span></div>
+            </div>
+            <div class="journey-icon-box">
+                <div class="play-wrap s4">
+                    <div class="play-tri s4"></div>
+                    <span class="play-emoji">😠</span>
+                </div>
+            </div>
+            <div class="journey-action-box">
+                <div class="j-label-action">action: <span>they spend more time searching for the right dongle amidst the clutter, leading to delays and frustration in their workflow.</span></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="rule"></div>
+
+    <!-- 03 CONCEPTS -->
+    <div class="section reveal" style="padding-top:0;">
+        <div class="section-hud">
+            <span class="section-num">03</span>
+            <div class="section-line"></div>
+            <span class="section-tag">Concepts</span>
+            <div class="section-line"></div>
+        </div>
+        <h2 class="section-title">Ideation &amp; <em>Iteration</em></h2>
+        <p class="section-sub">Sketching · CAD · Refinement</p>
+    </div>
+
+    <div class="img-frame reveal">
+        <img src="images/brillum/concepts.jpg" alt="Concept sketches">
+    </div>
+    <p class="img-caption reveal" style="margin-bottom:40px;">Initial concept exploration</p>
+
+    <div class="split reveal">
+        <div class="img-frame">
+            <img src="images/brillum/iteration.jpg" alt="Iteration">
+        </div>
+        <div class="text-col">
+            <div class="eyebrow-tag">Selected Direction</div>
+            <h3>The direction that <em>does it all</em></h3>
+            <p>Further development was done on CAD, exploring new form and hinge mechanisms. Three key criteria drove the selection:</p>
+            <div class="criteria-list">
+                <div class="criteria-item">
+                    <span class="criteria-num">01</span>
+                    <span class="criteria-text">Offers the best light adjustment flexibility</span>
+                </div>
+                <div class="criteria-item">
+                    <span class="criteria-num">02</span>
+                    <span class="criteria-text">Doesn't require much desk space</span>
+                </div>
+                <div class="criteria-item">
+                    <span class="criteria-num">03</span>
+                    <span class="criteria-text">Fully adjustable from light settings to light spread and projection</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CAD -->
+    <div class="grid-3 reveal" style="margin-top:40px;height:380px;">
+        <div class="img-frame" style="height:100%;background:#fff;"><img src="images/brillum/cad_01.jpg" alt="CAD view 01" style="width:100%;height:100%;object-fit:contain;"></div>
+        <div class="img-frame" style="height:100%;"><img src="images/brillum/cad_02.jpg" alt="CAD view 02" style="width:100%;height:100%;object-fit:cover;"></div>
+        <div class="img-frame" style="height:100%;"><img src="images/brillum/cad_03.jpg" alt="CAD view 03" style="width:100%;height:100%;object-fit:cover;"></div>
+    </div>
+
+    <div class="rule"></div>
+
+    <!-- 04 PROTOTYPING -->
+    <div class="section reveal" style="padding-top:0;">
+        <div class="section-hud">
+            <span class="section-num">04</span>
+            <div class="section-line"></div>
+            <span class="section-tag">Prototyping</span>
+            <div class="section-line"></div>
+        </div>
+        <h2 class="section-title">Built by <em>hand</em></h2>
+        <p class="section-sub">Laser Cut · Assembled · Tested</p>
+    </div>
+
+    <div class="reveal" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:start;">
+        <div class="img-frame"><img src="images/brillum/proto_tests.jpg" alt="Tests"></div>
+        <div class="img-frame"><img src="images/brillum/proto_assembled.jpg" alt="Assembled"></div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+            <div class="img-frame" style="flex:1;min-height:0;"><img src="images/brillum/proto_laser.jpg" alt="Laser cut"></div>
+            <div class="img-frame" style="flex:1;min-height:0;"><img src="images/brillum/proto_detail.jpg" alt="Detail"></div>
+        </div>
+    </div>
+
+    <div class="rule"></div>
+
+    <div style="text-align:center;padding:40px 0 104px;">
+        <a href="https://drive.google.com/file/d/1zCEfgIFhRXRF0FpMYViKy_5ZN1sgeVq6/view?usp=sharing" target="_blank" style="display:inline-block;padding:14px 32px;border:1px solid var(--glass-b);border-radius:8px;color:var(--ink-1);text-decoration:none;font-size:14px;letter-spacing:0.06em;background:var(--glass-2);transition:background 0.2s;">access to full processBook</a>
+    </div>
+
+</main>
+
+<footer>
+    <p>Brillum &nbsp;·&nbsp; Khaled Abdul Rahman &nbsp;·&nbsp; 2024</p>
+    <a href="index.html" class="footer-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+        Back to Portfolio
+    </a>
+</footer>
+
+<script>
+    const heroPhoto = document.getElementById('heroPhoto');
+    window.addEventListener('scroll', () => {
+        heroPhoto.style.transform = `scale(1.04) translateY(${window.scrollY * 0.28}px)`;
+    }, { passive: true });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+        });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
